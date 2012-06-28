@@ -33,6 +33,7 @@ int main()
   BasPosMat.resize(Dim9,-1);
   eigs.resize(Vdim,-1);
     
+  //Make a basis position matrix...
   for (unsigned long i1=0; i1<Dim9; i1++){
     temp = 0;
     for (int sp =0; sp<Bsize; sp++){
@@ -46,8 +47,8 @@ int main()
   
   int Adim = 128;
   int Bdim = 512;
-  long double Z = 0;
-  Array<long double,2> supermat(Adim,states);
+  long double Z = 0;  // The normalization?
+  Array<long double,2> supermat(Adim,states); 
   int a(0),b(0),c(0),d(0);
   long double temp3=0;
   double temp2=0;
@@ -62,14 +63,18 @@ int main()
   temp3=0;
   for(int i=0; i<Vdim; i++){ 
 	  a = Basis[i];
+	  //somehow extractying the region A and region B states
 	  b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
 	  c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
 	  d = BasPosMat[c];
 	  fin >> temp3;
+	  //this matrix is like the sqrt of the RDM (sorta)
 	  supermat(b,d) = temp3; 
   }
 
 
+
+  //multiplying the supermat by its transpose to get the RDM
   temp2=0;
   DM=0;
   for(int i=0; i<Adim; i++){
@@ -82,7 +87,7 @@ int main()
     }
   }
   
-
+  //Diagonalizing the RDM (don't need this for Renyi, right??)
   while(dd.size()>0){dd.erase(dd.begin());}
   diagWithLapack_R(DM,dd); 
   renyi=0; vN=0; temp5=0;
@@ -98,6 +103,8 @@ int main()
   cout << "XY T=0 Renyi"  << "     " << setprecision(15) << -log(renyi)*2 << endl;
   cout << "XY T=0 von Neumann"  << "     " << setprecision(15) << vN*2 << endl;
 
+  
+  // Doing it all again for the Heisenberg model and then for XXZ
 
   ifstream fin1("HEISzerovector.dat");
   supermat=0;
