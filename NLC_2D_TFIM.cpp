@@ -75,7 +75,7 @@ int main(){
         cout<<"h="<<h<<" J="<<J<<" graph #"<<i<<"  ";
 	//        cout<<" energy "<<setprecision(12)<<energy<<endl;
 	//        cout<<"WeightHigh["<<i<<"] = "<<WeightHigh.back()<<endl;
-	RunningSumHigh += WeightHigh.back();
+	RunningSumHigh += WeightHigh.back()*fileGraphs.at(i).LatticeConstant;
         cout <<"RunningSumHigh = "<< RunningSumHigh;
         cout<<endl;
 	
