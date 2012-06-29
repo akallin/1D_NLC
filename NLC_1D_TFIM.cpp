@@ -78,7 +78,6 @@ int main(){
 	RunningSumHigh += WeightHigh.back();
         cout <<"RunningSumHigh = "<< RunningSumHigh;
         cout<<endl;
-	
       }
       
       fout<<"h= "<<h<<" J= "<<J;	
