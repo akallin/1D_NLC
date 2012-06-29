@@ -1,4 +1,4 @@
-OBJS = NLC_1D_TFIM.cpp GenHam.o  Lanczos_07.o lapack.o graphs.o #Lattice_16B.cpp
+OBJS = NLC_1D_TFIM.cpp GenHam.o  Lanczos_07.o lapack.o graphs.o  #Lattice_16B.cpp
 CC = g++
 #CFLAGS = -O2 
 CFLAGS = -O2 -arch x86_64
@@ -8,8 +8,8 @@ LIBS = -framework Accelerate
 1d.out: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o 1d.out $(LIBS)
 
-NLC_1D_TFIM.o : NLC_1D_TFIM.cpp GenHam.h Lanczos_07.h lapack.h simparam.h
-	$(CC) $(CFLAGS) -c ED_Lan_1107.cpp
+NLC_1D_TFIM.o : NLC_1D_TFIM.cpp GenHam.h Lanczos_07.h lapack.h simparam.h 
+	$(CC) $(CFLAGS) -c NLC_1D_TFIM.cpp
 
 GenHam.o: GenHam.cpp GenHam.h Lanczos_07.h
 	$(CC) $(CFLAGS) -c GenHam.cpp

@@ -25,8 +25,10 @@ BZ_USING_NAMESPACE(blitz)
 #include "simparam.h"
 #include "graphs.h"
 #include "entropy.h"
+  
 
 int main(){
+
 
     double energy;
 
@@ -51,17 +53,17 @@ int main(){
     fout.precision(10);
     cout.precision(10);
     
-    J=1;
+    J=1;           
     
-    for(int hh=1; hh<10; hh++){
-      h = hh;
-      
+    //   for(int hh=1; hh<10; hh++){
+    //  h = hh;
+    {h=3.044;  
       WeightHigh.push_back(-h); //Weight for site zero
       double RunningSumHigh = WeightHigh[0];      
       
       for (int i=1; i<fileGraphs.size(); i++){ //skip the zeroth graph
 	
-	
+  	
 	//---High-Field---
 	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
 
@@ -69,7 +71,7 @@ int main(){
         HV.SparseHamJQ();  //generates sparse matrix Hamiltonian for Lanczos
         energy = lancz.Diag(HV, 1, prm.valvec_, eVec); // Hamiltonian, # of eigenvalues to converge, 1 for -values only, 2 for vals AND vectors
 
-	
+	Entropy1D(eVec);
 
         WeightHigh.push_back(energy);
         for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++)
