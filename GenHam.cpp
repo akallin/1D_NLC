@@ -20,9 +20,6 @@ GENHAM::GENHAM(const int Ns, const h_float J_, const h_float h_, vector <pair<in
 
   for (unsigned long i1=0; i1<Dim; i1++) 
   {
-      temp = 0;
-      for (int sp =0; sp<Nsite; sp++)
-          temp += (i1>>sp)&1;  //unpack bra
           Basis.push_back(i1);
           BasPos.at(i1)=Basis.size()-1;
           Vdim++;

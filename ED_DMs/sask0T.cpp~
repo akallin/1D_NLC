@@ -33,14 +33,14 @@ int main()
   BasPosMat.resize(Dim9,-1);
   eigs.resize(Vdim,-1);
     
-  //Make a basis position matrix...
+  //Make a basis position vector for only region B
   for (unsigned long i1=0; i1<Dim9; i1++){
     temp = 0;
     for (int sp =0; sp<Bsize; sp++){
       temp += (i1>>sp)&1; 
     }
-    if (temp<=8){ 
-      BasPosMat.at(i1)=states;
+    if (temp<=8){ //if half or less of the spins are up
+      BasPosMat.at(i1)=states; //then this is a possible state in region B
       states++;
     }
   }

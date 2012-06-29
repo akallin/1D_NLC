@@ -47,7 +47,7 @@ int main()
   
   int Adim = 128;
   int Bdim = 512;
-  long double Z = 0;  // The normalization?
+  long double Z = 0;  // The normalization? Doesn't seem to be used
   Array<long double,2> supermat(Adim,states); 
   int a(0),b(0),c(0),d(0);
   long double temp3=0;
@@ -63,7 +63,7 @@ int main()
   temp3=0;
   for(int i=0; i<Vdim; i++){ 
 	  a = Basis[i];
-	  //somehow extractying the region A and region B states
+	  //somehow extractifying the region A and region B states
 	  b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
 	  c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
 	  d = BasPosMat[c];
