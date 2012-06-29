@@ -52,7 +52,7 @@ int main(){
     
     J=1;
     
-    for(int hh=1; hh<10; hh++){
+    for(double hh=1; hh<5; hh+=0.1){
       h = hh;
       
       WeightHigh.push_back(-h); //Weight for site zero
