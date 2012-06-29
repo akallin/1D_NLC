@@ -24,6 +24,7 @@ BZ_USING_NAMESPACE(blitz)
 #include "lapack.h"
 #include "simparam.h"
 #include "graphs.h"
+#include "entropy.h"
 
 int main(){
 
@@ -67,6 +68,8 @@ int main(){
         LANCZOS lancz(HV.Vdim);  //dimension of reduced Hilbert space (Sz sector)
         HV.SparseHamJQ();  //generates sparse matrix Hamiltonian for Lanczos
         energy = lancz.Diag(HV, 1, prm.valvec_, eVec); // Hamiltonian, # of eigenvalues to converge, 1 for -values only, 2 for vals AND vectors
+
+	
 
         WeightHigh.push_back(energy);
         for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++)
