@@ -11,7 +11,7 @@ LIBS = -framework Accelerate
 NLC_1D_TFIM.o : NLC_1D_TFIM.cpp GenHam.h Lanczos_07.h lapack.h simparam.h 
 	$(CC) $(CFLAGS) -c NLC_1D_TFIM.cpp
 
-GenHam.o: GenHam.cpp GenHam.h Lanczos_07.h
+GenHam.o: GenHam.cpp GenHam.h Lanczos_07.h entropy.h
 	$(CC) $(CFLAGS) -c GenHam.cpp
 
 #Lattice_16B.o: Lattice_16B.cpp GenHam.h 
