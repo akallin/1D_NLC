@@ -33,14 +33,8 @@ inline void Entropy1D(Array<l_double,1> eigs)
   
   int Adim=1;
   int Bdim=Dim;
-  int binSpin=0;
-  int maxBin(0); 
   
-  int temp=2;
-  for(int i=1; i<Nsite; i++){temp *=2;  }
-  maxBin = temp-1;
 
-  //cout << "maxBin " << maxBin << endl;
 
   Array<long double,2> SuperMat;
   int a(0),b(0);
@@ -52,7 +46,6 @@ inline void Entropy1D(Array<l_double,1> eigs)
 
   for(int Asite=1; Asite<Nsite; Asite++){
     
-    binSpin += Adim; //cout << "binSpin = " << binSpin << endl;
     Adim*=2;
     Bdim/=2;
     SuperMat.resize(Adim,Bdim); 
@@ -65,8 +58,8 @@ inline void Entropy1D(Array<l_double,1> eigs)
       // extractifying the region A and region B states
       //b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
       //c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
-      a = i&binSpin;
-      b = (i&(maxBin-binSpin))>>(Asite);
+      a = i&(Adim-1);
+      b = (i>>Asite)&(Bdim-1);
       
       SuperMat(a,b) = eigs(i);//sqrt(Dim)/Asite*eigs(i); 
       //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
@@ -74,21 +67,22 @@ inline void Entropy1D(Array<l_double,1> eigs)
 
     }
     cout << "Dim = " << Dim << endl;
-    
 
+    //   if(Adim==2||Bdim==2) {cout << SuperMat << endl;}
+    
     DM.resize(Adim,Adim);
     DM=0;
     temp2=0;
     //multiplying the supermat by its transpose to get the RDM
     DM=0;
     for(int i=0; i<Adim; i++){
-      for(int j=0; j<Adim; j++){
-	temp2=0;
-	for(int k=0; k<Bdim; k++){
-	  temp2 += SuperMat(i,k)*SuperMat(j,k);
-	}
-	DM(i,j) = temp2;
+      //    for(int j=0; j<Adim; j++){
+      temp2=0;
+      for(int k=0; k<Bdim; k++){
+	temp2 += SuperMat(i,k)*SuperMat(i,k);
       }
+      DM(i,i) = temp2;
+      
     }
     
     renyi=0;
@@ -98,8 +92,8 @@ inline void Entropy1D(Array<l_double,1> eigs)
       renyi += DM(s,s)*DM(s,s);
     }
     
-    //    cout << "T=0 Norm"  << "     " << setprecision(15) << norm << endl;
-    cout << "Asites = " << Asite << "   Renyi"  << "  " << setprecision(15) << -log(renyi/norm/norm) << endl;
+    cout << "Norm"  << "     " << setprecision(15) << norm << endl;
+    cout << "Asites = " << Asite << "   Renyi"  << "  " << setprecision(15) << -log(renyi) << endl;
    
     cout << endl;
  

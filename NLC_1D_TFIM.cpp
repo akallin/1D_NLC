@@ -57,7 +57,7 @@ int main(){
     
     //   for(int hh=1; hh<10; hh++){
     //  h = hh;
-    {h=3.044;  
+    {h=1;  
       WeightHigh.push_back(-h); //Weight for site zero
       double RunningSumHigh = WeightHigh[0];      
       
