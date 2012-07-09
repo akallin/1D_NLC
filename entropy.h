@@ -36,9 +36,11 @@ inline void Entropy1D(Array<l_double,1> eigs)
   int binSpin=0;
   int maxBin(0); 
   
-  int temp=1;
+  int temp=2;
   for(int i=1; i<Nsite; i++){temp *=2;  }
   maxBin = temp-1;
+
+  //cout << "maxBin " << maxBin << endl;
 
   Array<long double,2> SuperMat;
   int a(0),b(0);
@@ -50,7 +52,7 @@ inline void Entropy1D(Array<l_double,1> eigs)
 
   for(int Asite=1; Asite<Nsite; Asite++){
     
-    binSpin += Adim;// cout << "binSpin = " << binSpin << endl;
+    binSpin += Adim; //cout << "binSpin = " << binSpin << endl;
     Adim*=2;
     Bdim/=2;
     SuperMat.resize(Adim,Bdim); 
@@ -58,17 +60,22 @@ inline void Entropy1D(Array<l_double,1> eigs)
     a=0;b=0;
     temp3=0;
 
+    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
     for(int i=0; i<Dim; i++){ 
       // extractifying the region A and region B states
       //b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
       //c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
       a = i&binSpin;
-      b = (i&(maxBin-binSpin))>>Asite;
-      cout << "a " << a << "   b " << b << endl;
-
+      b = (i&(maxBin-binSpin))>>(Asite);
+      
       SuperMat(a,b) = eigs(i);//sqrt(Dim)/Asite*eigs(i); 
+      //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
+      //cout << "a " << a << "   b " << b << endl;
+
     }
+    cout << "Dim = " << Dim << endl;
     
+
     DM.resize(Adim,Adim);
     DM=0;
     temp2=0;
@@ -93,7 +100,9 @@ inline void Entropy1D(Array<l_double,1> eigs)
     
     //    cout << "T=0 Norm"  << "     " << setprecision(15) << norm << endl;
     cout << "Asites = " << Asite << "   Renyi"  << "  " << setprecision(15) << -log(renyi/norm/norm) << endl;
-    
+   
+    cout << endl;
+ 
   }
 }
 #endif
