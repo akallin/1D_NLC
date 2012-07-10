@@ -56,10 +56,11 @@ double LANCZOS::Diag(const GENHAM& SparseH, const int Neigen, const int Evects2,
     //create a "random" starting vector
     V0=0;
     for (int vi=0; vi<V0.size(); vi++) { 
-      if (vi%4 == 0) V0(vi)=1.0;
-      else if (vi%5 == 0) V0(vi)=-2.0;
-      else if (vi%7 == 0) V0(vi)=3.0;
-      else if (vi%9 == 0) V0(vi)=-4.0;
+        V0(vi)=1.0;
+      //if (vi%4 == 0) V0(vi)=1.0;
+      //else if (vi%5 == 0) V0(vi)=-2.0;
+      //else if (vi%7 == 0) V0(vi)=3.0;
+      //else if (vi%9 == 0) V0(vi)=-4.0;
     }
     Normalize(V0);  
    

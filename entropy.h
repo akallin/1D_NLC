@@ -50,8 +50,8 @@ inline void Entropy1D(Array<l_double,1> eigs)
     long double vN;
     long double temp5;
 
-  for(int Asite=1; Asite<Nsite; Asite++){
-    
+    //for(int Asite=1; Asite<Nsite; Asite++){
+    for(int Asite=1; Asite<Nsite/2+1; Asite++){
     Adim*=2;
     Bdim/=2;
     SuperMat.resize(Adim,Bdim); 
@@ -60,9 +60,10 @@ inline void Entropy1D(Array<l_double,1> eigs)
     temp3=0;
     norm=0;
     magnetization=0;
-    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
-    if(Asite==1){
-      cout << eigs << endl;}
+    // cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
+    //if(Asite==1){
+      //  cout << eigs << endl;}
+
     for(int i=0; i<Dim; i++){ 
       // extractifying the region A and region B states
       //b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
@@ -74,7 +75,7 @@ inline void Entropy1D(Array<l_double,1> eigs)
       //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
       //cout << "a " << a << "   b " << b << endl;
       temp3=0;
-      if(Asite==1){
+      if(Asite==8){
       for (int sp=0; sp<Nsite; sp++){
 	temp3 += (i>>sp)&1; 
       }
@@ -85,9 +86,10 @@ inline void Entropy1D(Array<l_double,1> eigs)
       }
     }
    
-    if(Asite==1){
-    cout << "Mag = " << magnetization/Nsite/norm << "   ";
-    cout << "Dim = " << Dim << "    Norm = " << norm << endl;
+    if(Asite==8){
+      //  cout << "Mag = ";
+      cout << magnetization/Nsite/norm << "   ";
+      // cout << "Dim = " << Dim << "    Norm = " << norm << endl<< endl;
     }
     magnetization = 0;
     norm = 0;
@@ -125,10 +127,13 @@ inline void Entropy1D(Array<l_double,1> eigs)
       //	cout << dd[s] <<endl;
     }
 
-  cout << "XY T=0 Renyi"  << "     " << setprecision(15) << -log(renyi)*2 << endl;
-  cout << "XY T=0 von Neumann"  << "     " << setprecision(15) << vN*2 << endl;
+    if(Asite==8){
+      // cout << "XY T=0 Renyi"  << "     ";
+      cout <<" "<< setprecision(15) << -log(renyi);
+      // cout << "XY T=0 von Neumann"  << "     " << 
+      cout <<" "<< setprecision(15) << vN;// << endl;
 
-
+    }
 
     DM.resize(Adim,Adim);
     DM=0;
@@ -156,10 +161,12 @@ inline void Entropy1D(Array<l_double,1> eigs)
       // cout << "Renyi: "<< renyi << endl;
     }
     
-    cout << "Norm"  << "     " << setprecision(15) << norm << endl;
-    cout << "Asites = " << Asite << "   Renyi"  << "  " << setprecision(15) << -log(renyi) << endl;
-   
-    cout << endl;
+    if(Asite==8){
+      //  cout << "Norm"  << "     " << setprecision(15) << norm << endl;
+      //cout << "Asites = " << Asite << "   Renyi"  << "  " << 
+      cout <<" "<< setprecision(15) << -log(renyi) << endl;
+    }
+    //  cout << endl;
   
  
   }
