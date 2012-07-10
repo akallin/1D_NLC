@@ -39,7 +39,7 @@ inline void Entropy1D(Array<l_double,1> eigs)
   Array<long double,2> SuperMat;
   int a(0),b(0);
     long double renyi(0);
-    long double norm(0);
+    l_double norm(0);
     Array<double,2> DM(Adim,Adim);
     long double temp2(0);
     long double temp3(0);
@@ -58,8 +58,11 @@ inline void Entropy1D(Array<l_double,1> eigs)
     SuperMat=0;
     a=0;b=0;
     temp3=0;
-
+    norm=0;
+    magnetization=0;
     cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
+    if(Asite==1){
+      cout << eigs << endl;}
     for(int i=0; i<Dim; i++){ 
       // extractifying the region A and region B states
       //b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
@@ -70,17 +73,24 @@ inline void Entropy1D(Array<l_double,1> eigs)
       SuperMat(a,b) = eigs(i);//sqrt(Dim)/Asite*eigs(i); 
       //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
       //cout << "a " << a << "   b " << b << endl;
+      temp3=0;
+      if(Asite==1){
       for (int sp=0; sp<Nsite; sp++){
 	temp3 += (i>>sp)&1; 
       }
-      magnetization += (temp3-Nsite*.5)*2*eigs(i);
-      // cout << "i: " << i << "  mag: " << (temp3-Nsite*.5)*2 << endl;
+      magnetization += (temp3*2-Nsite)*eigs(i)*eigs(i);
+      norm += eigs(i)*eigs(i);
+      //cout << "i: " << i << "  mag: " << temp3*2-Nsite << endl;
       temp3=0;
+      }
     }
-    
-    cout << "Mag = " << magnetization/Nsite << "   ";
-    cout << "Dim = " << Dim << endl;
+   
+    if(Asite==1){
+    cout << "Mag = " << magnetization/Nsite/norm << "   ";
+    cout << "Dim = " << Dim << "    Norm = " << norm << endl;
+    }
     magnetization = 0;
+    norm = 0;
     //   if(Adim==2||Bdim==2) {cout << SuperMat << endl;}
     
     DM.resize(Adim,Adim);
