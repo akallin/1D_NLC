@@ -43,6 +43,12 @@ inline void Entropy1D(Array<l_double,1> eigs)
     Array<double,2> DM(Adim,Adim);
     long double temp2(0);
     long double temp3(0);
+    long double magnetization(0);
+
+
+    vector<double> dd;
+    long double vN;
+    long double temp5;
 
   for(int Asite=1; Asite<Nsite; Asite++){
     
@@ -60,14 +66,21 @@ inline void Entropy1D(Array<l_double,1> eigs)
       //c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
       a = i&(Adim-1);
       b = (i>>Asite)&(Bdim-1);
-      
+    
       SuperMat(a,b) = eigs(i);//sqrt(Dim)/Asite*eigs(i); 
       //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
       //cout << "a " << a << "   b " << b << endl;
-
+      for (int sp=0; sp<Nsite; sp++){
+	temp3 += (i>>sp)&1; 
+      }
+      magnetization += (temp3-Nsite*.5)*2*eigs(i);
+      // cout << "i: " << i << "  mag: " << (temp3-Nsite*.5)*2 << endl;
+      temp3=0;
     }
+    
+    cout << "Mag = " << magnetization/Nsite << "   ";
     cout << "Dim = " << Dim << endl;
-
+    magnetization = 0;
     //   if(Adim==2||Bdim==2) {cout << SuperMat << endl;}
     
     DM.resize(Adim,Adim);
@@ -76,26 +89,68 @@ inline void Entropy1D(Array<l_double,1> eigs)
     //multiplying the supermat by its transpose to get the RDM
     DM=0;
     for(int i=0; i<Adim; i++){
-      //    for(int j=0; j<Adim; j++){
-      temp2=0;
-      for(int k=0; k<Bdim; k++){
-	temp2 += SuperMat(i,k)*SuperMat(i,k);
+      for(int j=0; j<Adim; j++){
+	temp2=0;
+	for(int k=0; k<Bdim; k++){
+	  temp2 += SuperMat(i,k)*SuperMat(j,k);
+	}
+	DM(i,j) = temp2;
       }
-      DM(i,i) = temp2;
-      
     }
+
+
+
+
+
+    //Diagonalizing the RDM (don't need this for Renyi, right??)
+    while(dd.size()>0){dd.erase(dd.begin());}
+    diagWithLapack_R(DM,dd); 
+    renyi=0; vN=0; temp5=0;
+
+    for(int s=0;s<dd.size();s++){
+      renyi+=dd[s]*dd[s];
+      temp5=log(dd[s]);
+      if(!(temp5>-1000000000)){temp5=0;}
+      vN+=-dd[s]*temp5;
+      //	cout << dd[s] <<endl;
+    }
+
+  cout << "XY T=0 Renyi"  << "     " << setprecision(15) << -log(renyi)*2 << endl;
+  cout << "XY T=0 von Neumann"  << "     " << setprecision(15) << vN*2 << endl;
+
+
+
+    DM.resize(Adim,Adim);
+    DM=0;
+    temp2=0;
+    //multiplying the supermat by its transpose to get the RDM
+    DM=0;
+    for(int i=0; i<Adim; i++){
+      for(int j=0; j<Adim; j++){
+	temp2=0;
+	for(int k=0; k<Bdim; k++){
+	  temp2 += SuperMat(i,k)*SuperMat(j,k);
+	}
+	DM(i,j) = temp2;
+      }
+    }
+
+
     
     renyi=0;
     norm=0;
     for(int s=0;s<Adim;s++){
       norm += DM(s,s);
+      // cout << "Norm: " << norm << "   ";
       renyi += DM(s,s)*DM(s,s);
+      // cout << "Renyi: "<< renyi << endl;
     }
     
     cout << "Norm"  << "     " << setprecision(15) << norm << endl;
     cout << "Asites = " << Asite << "   Renyi"  << "  " << setprecision(15) << -log(renyi) << endl;
    
     cout << endl;
+  
  
   }
 }
