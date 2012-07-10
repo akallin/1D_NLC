@@ -78,7 +78,7 @@ inline void Entropy1D(Array<l_double,1> eigs)
       for (int sp=0; sp<Nsite; sp++){
 	temp3 += (i>>sp)&1; 
       }
-      magnetization += (temp3*2-Nsite)*eigs(i)*eigs(i);
+      magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
       norm += eigs(i)*eigs(i);
       //cout << "i: " << i << "  mag: " << temp3*2-Nsite << endl;
       temp3=0;
