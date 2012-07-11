@@ -64,7 +64,7 @@ int main(){
       double RunningSumHigh = WeightHigh[0];      
       
       //for (int i=1; i<fileGraphs.size(); i++){ //skip the zeroth graph
-      for(int i=2; i<3;i++){
+      for(int i=15; i<16;i++){
   	
 	//---High-Field---
 	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
@@ -73,7 +73,7 @@ int main(){
         HV.SparseHamJQ();  //generates sparse matrix Hamiltonian for Lanczos
         energy = lancz.Diag(HV, 1, prm.valvec_, eVec); // Hamiltonian, # of eigenvalues to converge, 1 for -values only, 2 for vals AND vectors
 
-	cout << eVec << endl;
+	//	cout << eVec << endl;
 	Entropy1D(eVec);
 
         WeightHigh.push_back(energy);
