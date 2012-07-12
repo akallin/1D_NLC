@@ -46,8 +46,8 @@ int main(){
     
     vector<double> WeightHigh;
 
-    ReadGraphsFromFile(fileGraphs, "lineargraphs.dat");
-
+    //    ReadGraphsFromFile(fileGraphs, "lineargraphs.dat");
+    ReadGraphsFromFile(fileGraphs,"L16pbc.dat");
 
     ofstream fout("output_1D.dat");
     fout.precision(10);
@@ -64,7 +64,7 @@ int main(){
       double RunningSumHigh = WeightHigh[0];      
       
       //for (int i=1; i<fileGraphs.size(); i++){ //skip the zeroth graph
-      for(int i=15; i<16;i++){
+      for(int i=0; i<1;i++){
   	
 	//---High-Field---
 	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
