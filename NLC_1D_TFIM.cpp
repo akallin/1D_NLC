@@ -56,7 +56,7 @@ int main(){
     J=1;           
     double hvals[24] = {.2,.3,.4,.5,.6,.7,.75,.875,.9375,.96875,1,1.03125,1.0625,1.125,1.25,1.5,1.75,2.0,2.5,3,3.5,4,4.5,5};
     
-    for(int hh=0; hh<24; hh++){
+    for(int hh=20; hh<24; hh++){
       h=hvals[hh];  
       cout <<  h <<" ";
       WeightHigh.push_back(-h); //Weight for site zero

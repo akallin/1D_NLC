@@ -38,20 +38,21 @@ inline void Entropy1D(Array<l_double,1>& eigs)
 
   Array<long double,2> SuperMat;
   int a(0),b(0);
-    long double renyi(0);
-    l_double norm(0);
-    Array<double,2> DM(Adim,Adim);
-    long double temp2(0);
-    long double temp3(0);
-    long double magnetization(0);
+  long double renyi(0);
+  l_double norm(0);
+  Array<double,2> DM(Adim,Adim);
+  Array<double,2> DMsq(Adim,Adim);
+  long double temp2(0);
+  long double temp3(0);
+  long double magnetization(0);
+  
 
-
-    vector<double> dd;
-    long double vN;
-    long double temp5;
-
-    //for(int Asite=1; Asite<Nsite; Asite++){
-    for(int Asite=1; Asite<Nsite/2+1; Asite++){
+  vector<double> dd;
+  long double vN;
+  long double temp5;
+  
+  //for(int Asite=1; Asite<Nsite; Asite++){
+  for(int Asite=1; Asite<Nsite/2+1; Asite++){
     Adim*=2;
     Bdim/=2;
     SuperMat.resize(Adim,Bdim); 
@@ -62,31 +63,31 @@ inline void Entropy1D(Array<l_double,1>& eigs)
     magnetization=0;
     // cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
     //if(Asite==1){
-      //  cout << eigs << endl;}
-
+    //  cout << eigs << endl;}
+    
     for(int i=0; i<Dim; i++){ 
       // extractifying the region A and region B states
       //b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
       //c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
       a = i&(Adim-1);
       b = (i>>Asite)&(Bdim-1);
-    
+      
       SuperMat(a,b) = eigs(i);//sqrt(Dim)/Asite*eigs(i); 
       //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
       //cout << "a " << a << "   b " << b << endl;
       temp3=0;
-      if(Asite==8){
-      for (int sp=0; sp<Nsite; sp++){
-	temp3 += (i>>sp)&1; 
-      }
-      magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
-      norm += eigs(i)*eigs(i);
-      //cout << "i: " << i << "  mag: " << temp3*2-Nsite << endl;
-      temp3=0;
+      if(Asite==1){
+	for (int sp=0; sp<Nsite; sp++){
+	  temp3 += (i>>sp)&1; 
+	}
+	magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
+	norm += eigs(i)*eigs(i);
+	//cout << "i: " << i << "  mag: " << temp3*2-Nsite << endl;
+	temp3=0;
       }
     }
-   
-    if(Asite==8){
+    
+    if(Asite==1){
       //  cout << "Mag = ";
       cout << magnetization/Nsite/norm << "   ";
       // cout << "Dim = " << Dim << "    Norm = " << norm << endl<< endl;
@@ -109,32 +110,22 @@ inline void Entropy1D(Array<l_double,1>& eigs)
 	DM(i,j) = temp2;
       }
     }
-
-
-
-
-
+    
     //Diagonalizing the RDM (don't need this for Renyi, right??)
     while(dd.size()>0){dd.erase(dd.begin());}
     diagWithLapack_R(DM,dd); 
     renyi=0; vN=0; temp5=0;
-
+    
     for(int s=0;s<dd.size();s++){
       renyi+=dd[s]*dd[s];
       temp5=log(dd[s]);
       if(!(temp5>-1000000000)){temp5=0;}
       vN+=-dd[s]*temp5;
-      //	cout << dd[s] <<endl;
     }
-
-    if(Asite==8){
-      // cout << "XY T=0 Renyi"  << "     ";
-      cout <<" "<< setprecision(15) << -log(renyi);
-      // cout << "XY T=0 von Neumann"  << "     " << 
-      cout <<" "<< setprecision(15) << vN;// << endl;
-
-    }
-
+    
+    cout <<" "<< setprecision(15) << -log(renyi) <<" "<< setprecision(15) << vN;    
+    
+    
     DM.resize(Adim,Adim);
     DM=0;
     temp2=0;
@@ -150,25 +141,36 @@ inline void Entropy1D(Array<l_double,1>& eigs)
       }
     }
 
+    //Square the DM
+    DMsq.resize(Adim,Adim);
+    DMsq=0;
+    for(int i=0; i<Adim; i++){
+      for(int j=0; j<Adim; j++){
+	temp2=0;
+	for(int k=0; k<Bdim; k++){
+	  temp2 += DM(i,k)*DM(j,k);
+	}
+	DMsq(i,j) = temp2; 
+      }
+    }
 
+    //cout << DMsq << endl;
     
     renyi=0;
     norm=0;
     for(int s=0;s<Adim;s++){
       norm += DM(s,s);
       // cout << "Norm: " << norm << "   ";
-      renyi += DM(s,s)*DM(s,s);
+      renyi += DMsq(s,s);
       // cout << "Renyi: "<< renyi << endl;
     }
     
-    if(Asite==8){
-      //  cout << "Norm"  << "     " << setprecision(15) << norm << endl;
-      //cout << "Asites = " << Asite << "   Renyi"  << "  " << 
-      cout <<" "<< setprecision(15) << -log(renyi) << endl;
-    }
+    //  cout << "Norm"  << "     " << setprecision(15) << norm << endl;
+    //cout << "Asites = " << Asite << "   Renyi"  << "  " << 
+    cout <<" "<< setprecision(15) << -log(renyi/norm) << endl;
+    
     //  cout << endl;
-  
- 
   }
+  cout << endl;
 }
 #endif
