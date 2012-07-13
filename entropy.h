@@ -2,7 +2,7 @@
 #ifndef entropy_H
 #define entropy_H
 
-inline void Entropy1D(Array<l_double,1> eigs)
+inline void Entropy1D(Array<l_double,1>& eigs)
 {
   long int Dim = eigs.size();
   int Nsite = log2(Dim); //cout << "Nsite = " << Nsite << endl;
