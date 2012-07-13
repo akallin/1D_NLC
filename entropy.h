@@ -147,7 +147,7 @@ inline void Entropy1D(Array<l_double,1>& eigs)
     for(int i=0; i<Adim; i++){
       for(int j=0; j<Adim; j++){
 	temp2=0;
-	for(int k=0; k<Bdim; k++){
+	for(int k=0; k<Adim; k++){
 	  temp2 += DM(i,k)*DM(j,k);
 	}
 	DMsq(i,j) = temp2; 
