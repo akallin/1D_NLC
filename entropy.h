@@ -25,9 +25,8 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
   long double temp5;
 
 
-  ents.resize(Nsite/2+1,0);
-  cout << "entropy vector size is: " << ents.size() << endl << endl;
-  for(int Asite=1; Asite<Nsite/2+1; Asite++){
+  ents.resize((Nsite+1)/2,0);
+  for(int Asite=1; Asite<(Nsite+1)/2+1; Asite++){
     Adim*=2;
     Bdim/=2;
     SuperMat.resize(Adim,Bdim); 

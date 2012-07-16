@@ -57,24 +57,27 @@ int main(){
     J=1;           
     double hvals[24] = {.2,.3,.4,.5,.6,.7,.75,.875,.9375,.96875,1,1.03125,1.0625,1.125,1.25,1.5,1.75,2.0,2.5,3,3.5,4,4.5,5};
     
-    for(int hh=20; hh<24; hh++){
+    for(int hh=0; hh<24; hh++){
       h=hvals[hh];  
       cout <<  h <<" ";
       WeightHigh.push_back(-h); //Weight for site zero
       double RunningSumHigh = WeightHigh[0];      
       
-      for (int i=1; i<fileGraphs.size(); i++){ //skip the zeroth graph
+      for (int i=1; i<fileGraphs.size()-fileGraphs.size()+4; i++){ //skip the zeroth graph
   	
 	//---Generate the Hamiltonian---
 	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
 	
-	
-	LANCZOS lancz(HV.Vdim);  //dimension of reduced Hilbert space (Sz sector)
+	LANCZOS lancz(HV.Vdim);  //dimension of Hilbert space
 	HV.SparseHamJQ();  //generates sparse matrix Hamiltonian for Lanczos
 
+	
 	//---Diagonalize and get Eigenvector---
 	energy = lancz.Diag(HV, 1, prm.valvec_, eVec); // Hamiltonian, # of eigenvalues to converge, 1 for -values only, 2 for vals AND vectors
-	
+	cout << "energyyy: " << energy << endl;
+	//if(energy==999){
+	  
+
 	//---Entropy Calculation---
 	Entropy1D(eVec, entVec);
 	

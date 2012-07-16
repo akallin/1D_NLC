@@ -13,6 +13,7 @@ GENHAM::GENHAM(const int Ns, const h_float J_, const h_float h_, vector <pair<in
   Dim = 2;  //  S=1/2 models : two states
   for (int ch=1; ch<Nsite; ch++) Dim *=2;
 
+
   BasPos.resize(Dim,-1); //initialization 
 
   Vdim=0;
@@ -24,6 +25,7 @@ GENHAM::GENHAM(const int Ns, const h_float J_, const h_float h_, vector <pair<in
           BasPos.at(i1)=Basis.size()-1;
           Vdim++;
   }//Dim
+
 
   //cout<<"Vdim "<<Vdim<<" "<<Dim<<endl;
 
