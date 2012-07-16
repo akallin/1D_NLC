@@ -2,39 +2,13 @@
 #ifndef entropy_H
 #define entropy_H
 
-inline void Entropy1D(Array<l_double,1>& eigs)
+inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
 {
   long int Dim = eigs.size();
   int Nsite = log2(Dim); //cout << "Nsite = " << Nsite << endl;
-  // int Nsite = 16; //This should be an input parameter
-  // long int Dim = (int)pow(2.0,Nsite);
-  // if(Dim%2==1){cout << "DIMENSION ERRRRRRRROR" << endl;}
-  //  vector <long double> eigs; //This will be the vector passed from the main program
-  //can just calculate the number of sites from the vector length actually!
-  //  eigs.resize(Dim,-1);
-
-  // Create original basis
-  //  for (unsigned long i1=0; i1<Dim; i1++){
-  //      Basis.push_back(i1);
-  //   BasPos.at(i1)=Basis.size()-1;
-  //   Vdim++;
-  //   }
-  // }
-  //  int Bsize = 9;
-  //  int Dim9 = 512;
-  //  int states=0;
-  //  BasPosMat.resize(Dim9,-1);
-  //Make a basis position vector for only region B
-  //  for (unsigned long i1=0; i1<Dim9; i1++){
-  //      BasPosMat.at(i1)=states; //then this is a possible state in region B
-  //      states++;
-  //    }
-  //  }
-  
+ 
   int Adim=1;
   int Bdim=Dim;
-  
-
 
   Array<long double,2> SuperMat;
   int a(0),b(0);
@@ -45,13 +19,14 @@ inline void Entropy1D(Array<l_double,1>& eigs)
   long double temp2(0);
   long double temp3(0);
   long double magnetization(0);
-  
 
   vector<double> dd;
   long double vN;
   long double temp5;
-  
-  //for(int Asite=1; Asite<Nsite; Asite++){
+
+
+  ents.resize(Nsite/2+1,0);
+  cout << "entropy vector size is: " << ents.size() << endl << endl;
   for(int Asite=1; Asite<Nsite/2+1; Asite++){
     Adim*=2;
     Bdim/=2;
@@ -61,9 +36,6 @@ inline void Entropy1D(Array<l_double,1>& eigs)
     temp3=0;
     norm=0;
     magnetization=0;
-    // cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
-    //if(Asite==1){
-    //  cout << eigs << endl;}
     
     for(int i=0; i<Dim; i++){ 
       // extractifying the region A and region B states
@@ -72,29 +44,25 @@ inline void Entropy1D(Array<l_double,1>& eigs)
       a = i&(Adim-1);
       b = (i>>Asite)&(Bdim-1);
       
-      SuperMat(a,b) = eigs(i);//sqrt(Dim)/Asite*eigs(i); 
-      //    cout << "Adim = " << Adim << "  Bdim = " << Bdim << endl;
-      //cout << "a " << a << "   b " << b << endl;
+      SuperMat(a,b) = eigs(i);
+
       temp3=0;
+      //measure the magnetization
       if(Asite==1){
 	for (int sp=0; sp<Nsite; sp++){
 	  temp3 += (i>>sp)&1; 
 	}
 	magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
 	norm += eigs(i)*eigs(i);
-	//cout << "i: " << i << "  mag: " << temp3*2-Nsite << endl;
 	temp3=0;
       }
     }
     
     if(Asite==1){
-      //  cout << "Mag = ";
       cout << magnetization/Nsite/norm << "   ";
-      // cout << "Dim = " << Dim << "    Norm = " << norm << endl<< endl;
     }
     magnetization = 0;
     norm = 0;
-    //   if(Adim==2||Bdim==2) {cout << SuperMat << endl;}
     
     DM.resize(Adim,Adim);
     DM=0;

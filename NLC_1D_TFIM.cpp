@@ -37,6 +37,7 @@ int main(){
     double h;
 
     Array<l_double,1> eVec;
+    Array<l_double,1> entVec;
 
     J=prm.JJ_;
     h=prm.hh_;
@@ -75,7 +76,7 @@ int main(){
 	energy = lancz.Diag(HV, 1, prm.valvec_, eVec); // Hamiltonian, # of eigenvalues to converge, 1 for -values only, 2 for vals AND vectors
 	
 	//---Entropy Calculation---
-	Entropy1D(eVec);
+	Entropy1D(eVec, entVec);
 	
 	//---Energy NLC Calculation---
 	WeightHigh.push_back(energy);
