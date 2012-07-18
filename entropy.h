@@ -57,9 +57,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
       }
     }
     
-    if(Asite==1){
-      cout << magnetization/Nsite/norm << "   ";
-    }
+    //    if(Asite==1){ cout << magnetization/Nsite/norm << "   ";    }
     magnetization = 0;
     norm = 0;
     
@@ -90,7 +88,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
       vN+=-dd[s]*temp5;
     }
     
-    cout <<" "<< setprecision(15) << -log(renyi) <<" "<< setprecision(15) << vN;    
+    //    cout <<" "<< setprecision(15) << -log(renyi) <<" "<< setprecision(15) << vN;    
     
     
     DM.resize(Adim,Adim);
@@ -134,10 +132,10 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
     
     //  cout << "Norm"  << "     " << setprecision(15) << norm << endl;
     //cout << "Asites = " << Asite << "   Renyi"  << "  " << 
-    cout <<" "<< setprecision(15) << -log(renyi/norm) << endl;
+    //    cout <<" "<< setprecision(15) << -log(renyi/norm) << endl;
     
     //  cout << endl;
   }
-  cout << endl;
+  //cout << endl;
 }
 #endif
