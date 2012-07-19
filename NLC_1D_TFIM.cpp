@@ -47,6 +47,8 @@ int main(){
     
     vector<double> WeightEnergy;
     vector<double> WeightEntropy;
+    double RunningSumEnergy(0);
+    double RunningSumEntropy(0);
 
     ReadGraphsFromFile(fileGraphs, "lineargraphs.dat");
     //ReadGraphsFromFile(fileGraphs,"L16pbc.dat");
@@ -60,18 +62,21 @@ int main(){
     
     for(int hh=0; hh<24; hh++){
       h=hvals[hh];  
-      cout <<  "h = " <<h <<" ";
+      cout <<  "h= " <<h <<" ";
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
+      WeightEntropy.push_back(0);
       double RunningSumEnergy = WeightEnergy[0];      
+      double RunningSumEntropy = 0;
 
       //Two Site Graph
       WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
-      //Do all the stuff for the 2 site system here!!!!!!
+      WeightEntropy.push_back(-log(1+8*h*h)+log(2+8*h*h));
       //End of 2 site system stuff!!
 
       RunningSumEnergy+=WeightEnergy.back();
+      RunningSumEntropy+=WeightEntropy.back();
 
       for (int i=2; i<fileGraphs.size()-5; i++){ //skip the zeroth graph
   	
@@ -86,25 +91,30 @@ int main(){
 	energy = lancz.Diag(HV, 1, prm.valvec_, eVec); // Hamiltonian, # of eigenvalues to converge, 1 for -values only, 2 for vals AND vectors
 	//cout << "Graph " << i <<" energy: " << energy << endl;
 	
-	//---Energy NLC Calculation---
+	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
-
-	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++)
-	  WeightEnergy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEnergy[fileGraphs.at(i).SubgraphList[j].first];
-
-	//---Entropy Calculation---
 	Entropy1D(eVec, entVec);
-	
+	WeightEntropy.push_back(entVec(1));
+	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
+
+	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++){
+	  WeightEnergy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEnergy[fileGraphs.at(i).SubgraphList[j].first];
+	  WeightEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEntropy[fileGraphs.at(i).SubgraphList[j].first];
+	}
+
 	// cout<<"h="<<h<<" J="<<J<<" graph #"<<i<<" energy "<<setprecision(12)<<energy<<endl;
 	// cout<<"WeightHigh["<<i<<"] = "<<WeightHigh.back()<<endl;
 	RunningSumEnergy += WeightEnergy.back();
+	RunningSumEntropy += WeightEntropy.back();
 	//cout << "RunningSumEnergy " << i << " = "<< RunningSumEnergy <<endl;
       }
       
-      cout<<" Energy= "<<RunningSumEnergy<<endl;
+      cout<<" Energy= "<<RunningSumEnergy<<" Entropy= "<<RunningSumEntropy<<endl;
       
       WeightEnergy.clear();
+      WeightEntropy.clear();
       RunningSumEnergy=0;
+      RunningSumEntropy=0;
     }
     
     fout.close();

@@ -25,8 +25,11 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
   long double temp5;
 
 
-  ents.resize((Nsite+1)/2,0);
-  for(int Asite=1; Asite<(Nsite+1)/2+1; Asite++){
+  ents.resize(2,0);
+
+  ents=0;
+
+  for(int Asite=1; Asite<(Nsite+2)/2; Asite++){
     Adim*=2;
     Bdim/=2;
     SuperMat.resize(Adim,Bdim); 
@@ -47,6 +50,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
 
       temp3=0;
       //measure the magnetization
+      /*
       if(Asite==1){
 	for (int sp=0; sp<Nsite; sp++){
 	  temp3 += (i>>sp)&1; 
@@ -55,6 +59,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
 	norm += eigs(i)*eigs(i);
 	temp3=0;
       }
+      */
     }
     
     //    if(Asite==1){ cout << magnetization/Nsite/norm << "   ";    }
@@ -88,9 +93,16 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
       vN+=-dd[s]*temp5;
     }
     
+    //    ents(0)+=vN;
+    //    ents(1)+=renyi;
+    ents(1)+=-log(renyi);
+
+    if(Asite<(Nsite+1)/2){ ents(0)+=vN; ents(1)+=-log(renyi);}// ents(1)+=renyi; }
+    //else{cout << "Asite:"<<Asite<<" Nsite:"<<Nsite<<endl;}
+
     //    cout <<" "<< setprecision(15) << -log(renyi) <<" "<< setprecision(15) << vN;    
     
-    
+    /*------Commenting out the other S_2 calculation because it's unnecessary---------
     DM.resize(Adim,Adim);
     DM=0;
     temp2=0;
@@ -129,12 +141,13 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
       renyi += DMsq(s,s);
       // cout << "Renyi: "<< renyi << endl;
     }
-    
+    ---------------------------------------------------------------------*/
+
     //  cout << "Norm"  << "     " << setprecision(15) << norm << endl;
     //cout << "Asites = " << Asite << "   Renyi"  << "  " << 
-    //    cout <<" "<< setprecision(15) << -log(renyi/norm) << endl;
-    
+    //    cout <<" "<< setprecision(15) << -log(renyi/norm) << endl;   
     //  cout << endl;
+
   }
   //cout << endl;
 }
