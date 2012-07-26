@@ -104,8 +104,8 @@ int main(){
 
 	// cout<<"h="<<h<<" J="<<J<<" graph #"<<i<<" energy "<<setprecision(12)<<energy<<endl;
 	// cout<<"WeightHigh["<<i<<"] = "<<WeightHigh.back()<<endl;
-	RunningSumEnergy += WeightEnergy.back();
-	RunningSumEntropy += WeightEntropy.back();
+	RunningSumEnergy += WeightEnergy.back()*fileGraphs.at(i).LatticeConstant;
+	RunningSumEntropy += WeightEntropy.back()*fileGraphs.at(i).LatticeConstant;
 	//cout << "RunningSumEnergy " << i << " = "<< RunningSumEnergy <<endl;
       }
       

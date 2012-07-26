@@ -22,7 +22,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
 
   vector<double> dd;
   long double vN;
-  long double temp5;
+  long double temp5, temp6;
 
 
   ents.resize(2,0);
@@ -87,17 +87,22 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
     renyi=0; vN=0; temp5=0;
     
     for(int s=0;s<dd.size();s++){
-      renyi+=dd[s]*dd[s];
-      temp5=log(dd[s]);
-      if(!(temp5>-1000000000)){temp5=0;}
-      vN+=-dd[s]*temp5;
+      //renyi+=dd[s]*dd[s];
+      if(abs(dd[s])<1e-15){dd[s]=0;}
+      renyi+=pow(dd[s],2.0);
+      // cout << dd[s] <<"   "<<pow(dd[s],0.5)<<"   "<<renyi << endl;
+      //temp5=log(dd[s]);
+      //if(!(temp5>-1000000000)){temp5=0;}
+      //vN+=-dd[s]*temp5;
     }
     
     //    ents(0)+=vN;
     //    ents(1)+=renyi;
-    ents(1)+=-log(renyi);
+    temp6 = -log(renyi);
+    ents(1)+=temp6;
+    if(Asite<(Nsite+1)/2){ ents(1)+=temp6;}
 
-    if(Asite<(Nsite+1)/2){ ents(0)+=vN; ents(1)+=-log(renyi);}// ents(1)+=renyi; }
+    //if(Asite<(Nsite+1)/2){ ents(0)+=vN; ents(1)+=-log(renyi);}// ents(1)+=renyi; }
     //else{cout << "Asite:"<<Asite<<" Nsite:"<<Nsite<<endl;}
 
     //    cout <<" "<< setprecision(15) << -log(renyi) <<" "<< setprecision(15) << vN;    
