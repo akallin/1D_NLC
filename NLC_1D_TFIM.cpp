@@ -29,7 +29,7 @@ BZ_USING_NAMESPACE(blitz)
 
 int main(){
 
-
+  double alpha = 1.5;
     double energy;
 
     PARAMS prm;  //Read parameters from param.dat  : see simparam.h
@@ -72,7 +72,7 @@ int main(){
 
       //Two Site Graph
       WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
-      WeightEntropy.push_back(TwoSiteEntropy(h,2));
+      WeightEntropy.push_back(TwoSiteEntropy(h,alpha));
       //End of 2 site system stuff!!
 
       RunningSumEnergy+=WeightEnergy.back();
@@ -93,7 +93,7 @@ int main(){
 	
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
-	Entropy1D(eVec, entVec);
+	Entropy1D(alpha ,eVec, entVec);
 	WeightEntropy.push_back(entVec(1));
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 

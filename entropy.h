@@ -10,12 +10,14 @@ inline double TwoSiteEntropy(double h, double alpha)
   CommonEnt = 0.5 + (1. + sqrt(1. + 4.*h*h))/(8.*h*h);
   DiffEnt = h*sqrt(1.+2.*h*h+sqrt(1.+4.*h*h))/2./sqrt(2.0);
 
-  unLog = pow(CommonEnt + DiffEnt,alpha) + pow(CommonEnt - DiffEnt,alpha);
+  unLog = pow(CommonEnt + DiffEnt,alpha) + pow(abs(CommonEnt - DiffEnt),alpha);
+
+  // cout << CommonEnt << "  " << DiffEnt << endl;
 
   return (1./(1.-alpha))*log(unLog);
 }
 
-inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
+inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents)
 {
   long int Dim = eigs.size();
   int Nsite = log2(Dim); //cout << "Nsite = " << Nsite << endl;
@@ -102,7 +104,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
     for(int s=0;s<dd.size();s++){
       //renyi+=dd[s]*dd[s];
       if(abs(dd[s])<1e-15){dd[s]=0;}
-      renyi+=pow(dd[s],2.0);
+      renyi+=pow(dd[s],alpha);
       // cout << dd[s] <<"   "<<pow(dd[s],0.5)<<"   "<<renyi << endl;
       //temp5=log(dd[s]);
       //if(!(temp5>-1000000000)){temp5=0;}
@@ -111,7 +113,7 @@ inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
     
     //    ents(0)+=vN;
     //    ents(1)+=renyi;
-    temp6 = -log(renyi);
+    temp6 = 1./(1.-alpha)*log(renyi);
     ents(1)+=temp6;
     if(Asite<(Nsite+1)/2){ ents(1)+=temp6;}
 
