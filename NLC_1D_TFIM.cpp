@@ -72,7 +72,7 @@ int main(){
 
       //Two Site Graph
       WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
-      WeightEntropy.push_back(-log(1+8*h*h)+log(2+8*h*h));
+      WeightEntropy.push_back(TwoSiteEntropy(h,2));
       //End of 2 site system stuff!!
 
       RunningSumEnergy+=WeightEnergy.back();

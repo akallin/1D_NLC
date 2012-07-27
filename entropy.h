@@ -2,6 +2,19 @@
 #ifndef entropy_H
 #define entropy_H
 
+inline double TwoSiteEntropy(double h, double alpha)
+{
+  double CommonEnt;
+  double DiffEnt;
+  double unLog;
+  CommonEnt = 0.5 + (1. + sqrt(1. + 4.*h*h))/(8.*h*h);
+  DiffEnt = h*sqrt(1.+2.*h*h+sqrt(1.+4.*h*h))/2./sqrt(2.0);
+
+  unLog = pow(CommonEnt + DiffEnt,alpha) + pow(CommonEnt - DiffEnt,alpha);
+
+  return (1./(1.-alpha))*log(unLog);
+}
+
 inline void Entropy1D(Array<l_double,1>& eigs, Array<l_double,1>& ents)
 {
   long int Dim = eigs.size();
