@@ -9,12 +9,18 @@ inline double TwoSiteEntropy(double h, double alpha)
   double unLog;
   CommonEnt = 0.5 + (1. + sqrt(1. + 4.*h*h))/(8.*h*h);
   DiffEnt = h*sqrt(1.+2.*h*h+sqrt(1.+4.*h*h))/2./sqrt(2.0);
-
+  
   unLog = pow(CommonEnt + DiffEnt,alpha) + pow(abs(CommonEnt - DiffEnt),alpha);
-
+  
   // cout << CommonEnt << "  " << DiffEnt << endl;
-
-  return (1./(1.-alpha))*log(unLog);
+  if(alpha==1.0){
+    // cout << CommonEnt - DiffEnt << endl;
+    return -(CommonEnt + DiffEnt)*log(CommonEnt + DiffEnt) 
+      - (CommonEnt - DiffEnt)*log(CommonEnt - DiffEnt);
+  }
+  else{
+    return (1./(1.-alpha))*log(unLog);
+  }
 }
 
 inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents)
@@ -96,24 +102,23 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
       }
     }
     
-    //Diagonalizing the RDM (don't need this for Renyi, right??)
+    //Diagonalizing the RDM
     while(dd.size()>0){dd.erase(dd.begin());}
     diagWithLapack_R(DM,dd); 
     renyi=0; vN=0; temp5=0;
     
     for(int s=0;s<dd.size();s++){
-      //renyi+=dd[s]*dd[s];
+      if(dd[s]<0){dd[s]=0;}
+      temp5=log(dd[s]);
+      if(!(temp5>-1000000000)){temp5=0;}
+      vN+=-dd[s]*temp5;
       if(abs(dd[s])<1e-15){dd[s]=0;}
       renyi+=pow(dd[s],alpha);
-      // cout << dd[s] <<"   "<<pow(dd[s],0.5)<<"   "<<renyi << endl;
-      //temp5=log(dd[s]);
-      //if(!(temp5>-1000000000)){temp5=0;}
-      //vN+=-dd[s]*temp5;
-    }
-    
-    //    ents(0)+=vN;
-    //    ents(1)+=renyi;
-    temp6 = 1./(1.-alpha)*log(renyi);
+      //   cout << vN << endl;
+    }    
+
+    if(alpha==1.0){temp6 = vN;}
+    else{temp6 = 1./(1.-alpha)*log(renyi);}
     ents(1)+=temp6;
     if(Asite<(Nsite+1)/2){ ents(1)+=temp6;}
 

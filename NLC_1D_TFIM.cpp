@@ -29,7 +29,7 @@ BZ_USING_NAMESPACE(blitz)
 
 int main(){
 
-  double alpha = 1.5;
+  double alpha = 1.0;
     double energy;
 
     PARAMS prm;  //Read parameters from param.dat  : see simparam.h
