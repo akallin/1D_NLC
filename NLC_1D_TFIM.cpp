@@ -29,7 +29,7 @@ BZ_USING_NAMESPACE(blitz)
 
 int main(){
 
-  double alpha = 0.25;
+  double alpha = 2;
     double energy;
 
     PARAMS prm;  //Read parameters from param.dat  : see simparam.h
@@ -71,14 +71,14 @@ int main(){
       double RunningSumEntropy = 0;
 
       //Two Site Graph
-      WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
-      WeightEntropy.push_back(TwoSiteEntropy(h,alpha));
+      //WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
+      //WeightEntropy.push_back(TwoSiteEntropy(h,alpha));
       //End of 2 site system stuff!!
 
-      RunningSumEnergy+=WeightEnergy.back();
-      RunningSumEntropy+=WeightEntropy.back();
+      //RunningSumEnergy+=WeightEnergy.back();
+      //RunningSumEntropy+=WeightEntropy.back();
 
-      for (int i=2; i<fileGraphs.size()-5; i++){ //skip the zeroth graph
+      for (int i=1; i<fileGraphs.size()-5; i++){ //skip the zeroth graph
   	
 	//---Generate the Hamiltonian---
 	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
