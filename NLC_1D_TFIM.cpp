@@ -29,7 +29,7 @@ BZ_USING_NAMESPACE(blitz)
 
 int main(){
 
-  double alpha = 1.0;
+  double alpha = 0.25;
     double energy;
 
     PARAMS prm;  //Read parameters from param.dat  : see simparam.h
@@ -58,7 +58,7 @@ int main(){
     cout.precision(10);
     
     J=1;           
-    double hvals[24] = {.2,.3,.4,.5,.6,.7,.75,.875,.9375,.96875,1,1.03125,1.0625,1.125,1.25,1.5,1.75,2.0,2.5,3,3.5,4,4.5,5};
+    double hvals[27] = {.2,.3,.4,.5,.6,.7,.75,0.8,0.825,0.85,.875,.9375,.96875,1,1.03125,1.0625,1.125,1.25,1.5,1.75,2.0,2.5,3,3.5,4,4.5,5};
     
     for(int hh=0; hh<24; hh++){
       h=hvals[hh];  

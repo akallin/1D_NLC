@@ -16,7 +16,7 @@ inline double TwoSiteEntropy(double h, double alpha)
   if(alpha==1.0){
     // cout << CommonEnt - DiffEnt << endl;
     return -(CommonEnt + DiffEnt)*log(CommonEnt + DiffEnt) 
-      - (CommonEnt - DiffEnt)*log(CommonEnt - DiffEnt);
+      - abs(CommonEnt - DiffEnt)*log(abs(CommonEnt - DiffEnt));
   }
   else{
     return (1./(1.-alpha))*log(unLog);
