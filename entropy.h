@@ -23,7 +23,7 @@ inline double TwoSiteEntropy(double h, double alpha)
   }
 }
 
-inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents)
+inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag)
 {
   long int Dim = eigs.size();
   int Nsite = log2(Dim); //cout << "Nsite = " << Nsite << endl;
@@ -50,6 +50,21 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
   ents=0;
 
+
+  temp3=0;
+  //measure the magnetization
+  for(int i=0; i<Dim; i++){ 
+    for (int sp=0; sp<Nsite; sp++){
+      temp3 += (i>>sp)&1; 
+    }
+    magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
+    norm += eigs(i)*eigs(i);
+    temp3=0;
+  }
+  mag = magnetization;
+  magnetization = 0;
+
+
   for(int Asite=1; Asite<(Nsite+2)/2; Asite++){
     Adim*=2;
     Bdim/=2;
@@ -69,22 +84,9 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
       
       SuperMat(a,b) = eigs(i);
 
-      temp3=0;
-      //measure the magnetization
-      /*
-      if(Asite==1){
-	for (int sp=0; sp<Nsite; sp++){
-	  temp3 += (i>>sp)&1; 
-	}
-	magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
-	norm += eigs(i)*eigs(i);
-	temp3=0;
-      }
-      */
-    }
     
+    }
     //    if(Asite==1){ cout << magnetization/Nsite/norm << "   ";    }
-    magnetization = 0;
     norm = 0;
     
     DM.resize(Adim,Adim);
