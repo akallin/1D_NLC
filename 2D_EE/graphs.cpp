@@ -27,7 +27,7 @@ graph::graph(vector< pair<int, int> > & AdjList, int IdentNumber, int order, int
 }
 
 graph::graph(vector< pair<int, int> > & AdjList, int IdentNumber, int order, int edgeCount, 
-	     int LattConst, bool Field, vector< pair<int, int> > & subgraphs, vector< vector< pair<int,int> > > embeddings )
+	     int LattConst, bool Field, vector< pair<int, int> > & subgraphs, vector< vector< int > > embeddings )
 {
     AdjacencyList = AdjList;
     Identifier = IdentNumber;
@@ -155,10 +155,19 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	ss << rawLines.at(currentLine+1);
 	int subSize(0);
 	string teststring;
+	int xMax(0), yMax(0), testint(0);
 	while(!ss.eof()){
 	  ss >> teststring;
+	  testint = atoi(teststring.c_str());
+	  if(testint>xMax){xMax = testint;}
+	  subSize++;
+	  
+	  ss >> teststring;
+	  testint = atoi(teststring.c_str());
+	  if(testint>yMax){yMax = testint;}
 	  subSize++;
 	}
+	subSize -=2;
 	if(subSize > 1 && tempGraph.NumberSites != subSize/2){
 	  cout << "#sites="<<tempGraph.NumberSites<< " #coords=" << subSize << " site coordinate problem!!!" << endl; 
 	  exit(1);
@@ -168,11 +177,14 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	teststring="";
 
 	ss << rawLines.at(currentLine+1);
+	//resize the vector of vectors??????
 	tempGraph.RealSpaceCoordinates.resize(tempGraph.NumberSites);
+	
+	//create the proper matrix thing-y (see notebook)
 	for(int b=0;b<tempGraph.NumberSites;b++){
-	  ss>>tempGraph.RealSpaceCoordinates[b].first;
-	  ss>>tempGraph.RealSpaceCoordinates[b].second;
-	  cout << tempGraph.RealSpaceCoordinates[b].first << "," <<tempGraph.RealSpaceCoordinates[b].second << endl;
+	  //  ss>>tempGraph.RealSpaceCoordinates[b].first;
+	  //	  ss>>tempGraph.RealSpaceCoordinates[b].second;
+	  //  cout << tempGraph.RealSpaceCoordinates[b].first << "," <<tempGraph.RealSpaceCoordinates[b].second << endl;
 	}
 	ss.str("");
 	ss.clear();
