@@ -132,25 +132,45 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
         string currentNumber;
     
         ss << rawLines.at(currentLine);
-          
+        
+
+	//------ Read in the first line of the graph ------//
+
         ss >> tempGraph.Identifier;
         ss >> tempGraph.NumberSites;
 	//    ss >> tempGraph.NumberBonds;
         ss >> tempGraph.LatticeConstant;
 	ss >> tempGraph.LowField;
-           
-        //cout << "Identifier = " <<tempGraph.Identifier << endl;
-        //cout << "NumberSites = " << tempGraph.NumberSites << endl;
-        //cout << "LatticeConstant = " <<tempGraph.LatticeConstant << endl;
-        //cout << "LowField = " << tempGraph.LowField << endl;
 
         ss.str("");
         ss.clear();
 
-        //read in bonds
-        ss << rawLines.at(currentLine+2);   
-        int subSize(0);
+           
+        //cout << "Identifier = " <<tempGraph.Identifier << endl;
+        //cout << "NumberSites = " << tempGraph.NumberSites << endl;
+        //cout << "LatticeConstant = " <<tempGraph.LatticeConstant << endl;
+        //cout << "LowField = " << tempGraph.LowField << endl	
+
+	// Read in the site coordinates //
+	ss << rawLines.at(currentLine+1);
+	int subSize(0);
 	string teststring;
+	while(!ss.eof()){
+	  ss >> teststring;
+	  subSize++;
+	}
+	if(subSize > 1 && tempGraph.NumberSites != subSize/2){
+	  cout << "#sites="<<tempGraph.NumberSites<< " #coords=" << subSize << " site coordinate problem!!!" << endl; 
+	  exit(1);
+	}
+	ss.str("");
+	ss.clear();
+	teststring="";
+
+
+        //------ Read in bonds ------//
+        ss << rawLines.at(currentLine+2);   
+        subSize = 0;
         while(!ss.eof()){
 	  ss >> teststring;
 	  subSize++;
@@ -172,7 +192,7 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 
 
 
-        //read in subclusters
+        //------ Read in subclusters ------//
         ss << rawLines.at(currentLine+3);   
         subSize=0;
         while(!ss.eof()){
