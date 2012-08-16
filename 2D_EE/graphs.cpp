@@ -167,6 +167,16 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	ss.clear();
 	teststring="";
 
+	ss << rawLines.at(currentLine+1);
+	tempGraph.RealSpaceCoordinates.resize(tempGraph.NumberSites);
+	for(int b=0;b<tempGraph.NumberSites;b++){
+	  ss>>tempGraph.RealSpaceCoordinates[b].first;
+	  ss>>tempGraph.RealSpaceCoordinates[b].second;
+	  cout << tempGraph.RealSpaceCoordinates[b].first << "," <<tempGraph.RealSpaceCoordinates[b].second << endl;
+	}
+	ss.str("");
+	ss.clear();
+
 
         //------ Read in bonds ------//
         ss << rawLines.at(currentLine+2);   
