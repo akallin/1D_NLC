@@ -161,11 +161,13 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	  testint = atoi(teststring.c_str());
 	  if(testint>xMax){xMax = testint;}
 	  subSize++;
-	  
+	  teststring="0";
+
 	  ss >> teststring;
 	  testint = atoi(teststring.c_str());
 	  if(testint>yMax){yMax = testint;}
 	  subSize++;
+	  teststring = "0";
 	}
 	subSize -=2;
 	if(subSize > 1 && tempGraph.NumberSites != subSize/2){
@@ -178,7 +180,11 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 
 	ss << rawLines.at(currentLine+1);
 	//resize the vector of vectors??????
-	tempGraph.RealSpaceCoordinates.resize(tempGraph.NumberSites);
+	tempGraph.RealSpaceCoordinates.resize(xMax+1);
+	for(int b=0;b<=xMax;b++){
+	  tempGraph.RealSpaceCoordinates[b].resize(yMax+1);
+	}
+	if(subSize>1 && (xMax+1)*(yMax+1)!=tempGraph.NumberSites){cout << xMax << " " << yMax << "  " << (xMax+1)*(yMax+1) << " ERROR! " << tempGraph.NumberSites << endl; exit(1);}
 	
 	//create the proper matrix thing-y (see notebook)
 	for(int b=0;b<tempGraph.NumberSites;b++){
