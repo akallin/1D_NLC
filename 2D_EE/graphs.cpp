@@ -186,11 +186,17 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	}
 	if(subSize>1 && (xMax+1)*(yMax+1)!=tempGraph.NumberSites){cout << xMax << " " << yMax << "  " << (xMax+1)*(yMax+1) << " ERROR! " << tempGraph.NumberSites << endl; exit(1);}
 	
-	//create the proper matrix thing-y (see notebook)
+	//create the matrix of real space coordinates!
+	int tempX(-1), tempY(-1);
 	for(int b=0;b<tempGraph.NumberSites;b++){
-	  //  ss>>tempGraph.RealSpaceCoordinates[b].first;
-	  //	  ss>>tempGraph.RealSpaceCoordinates[b].second;
-	  //  cout << tempGraph.RealSpaceCoordinates[b].first << "," <<tempGraph.RealSpaceCoordinates[b].second << endl;
+	  ss >> teststring;
+	  tempX = atoi(teststring.c_str());
+	  teststring="-1";
+	  ss >> teststring;
+	  tempY = atoi(teststring.c_str());
+	  teststring="-1";
+	  tempGraph.RealSpaceCoordinates[tempX][tempY]=b;
+	  //  cout << "("<<tempX<<","<<tempY<<")\n";
 	}
 	ss.str("");
 	ss.clear();
