@@ -25,33 +25,38 @@ inline double TwoSiteEntropy(double h, double alpha)
 
 inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag)
 {
+  // The dimension is number of eigenvalues
   long int Dim = eigs.size();
+  // Get number of sites from the dimension
   int Nsite = log2(Dim); //cout << "Nsite = " << Nsite << endl;
  
+  // The starting dimensions of region A and region B
   int Adim=1;
   int Bdim=Dim;
 
+  // A rectangular matrix containing the eigenvalues, used to get the RDM
   Array<long double,2> SuperMat;
-  int a(0),b(0);
-  long double renyi(0);
-  l_double norm(0);
+  // The RDM (SuperMat squared)
   Array<double,2> DM(Adim,Adim);
+  // The RDM squared
   Array<double,2> DMsq(Adim,Adim);
-  long double temp2(0);
-  long double temp3(0);
-  long double magnetization(0);
+  // Some temp variables
+  long double temp2(0), temp3(0), temp4(0), temp5(0), temp6(0);
+  int a(0),b(0);
 
+  // Eigenvalues of the RDM get put in dd
   vector<double> dd;
   long double vN;
-  long double temp5, temp6;
 
-
+  //Hardcoded to contain only 2 ents (though I may only do *one*!)
   ents.resize(2,0);
+  long double magnetization(0);
+  long double renyi(0);
+  l_double norm(0);
+
 
   ents=0;
 
-
-  temp3=0;
   //measure the magnetization
   for(int i=0; i<Dim; i++){ 
     for (int sp=0; sp<Nsite; sp++){
@@ -177,5 +182,108 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
   }
   //cout << endl;
+}
+
+inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag)
+{
+  long int Dim = eigs.size();
+  int Nsite = log2(Dim); //cout << "Nsite = " << Nsite << endl;
+  
+  int Adim=1;
+  int Bdim=Dim;
+
+  Array<long double,2> SuperMat;
+  int a(0),b(0);
+  long double renyi(0);
+  l_double norm(0);
+  Array<double,2> DM(Adim,Adim);
+  Array<double,2> DMsq(Adim,Adim);
+  long double temp2(0);
+  long double temp3(0);
+  long double magnetization(0);
+
+  vector<double> dd;
+  long double vN;
+  long double temp5, temp6;
+
+
+  ents.resize(2,0);
+
+  ents=0;
+
+
+  temp3=0;
+  //measure the magnetization
+  for(int i=0; i<Dim; i++){ 
+    for (int sp=0; sp<Nsite; sp++){
+      temp3 += (i>>sp)&1; 
+    }
+    magnetization += abs(temp3*2-Nsite)*eigs(i)*eigs(i);
+    norm += eigs(i)*eigs(i);
+    temp3=0;
+  }
+  mag = magnetization;
+  magnetization = 0;
+
+
+  for(int Asite=1; Asite<(Nsite+2)/2; Asite++){
+    Adim*=2;
+    Bdim/=2;
+    SuperMat.resize(Adim,Bdim); 
+    SuperMat=0;
+    a=0;b=0;
+    temp3=0;
+    norm=0;
+    magnetization=0;
+    
+    for(int i=0; i<Dim; i++){ 
+      // extractifying the region A and region B states
+      //b = (((a>>11)&31)<<2)+(((a>>7)&1)<<1)+((a>>3)&1);
+      //c = (((a>>8)&7)<<6)+(((a>>4)&7)<<3)+(a&7);
+      a = i&(Adim-1);
+      b = (i>>Asite)&(Bdim-1);
+      
+      SuperMat(a,b) = eigs(i);
+
+    
+    }
+    //    if(Asite==1){ cout << magnetization/Nsite/norm << "   ";    }
+    norm = 0;
+    
+    DM.resize(Adim,Adim);
+    DM=0;
+    temp2=0;
+    //multiplying the supermat by its transpose to get the RDM
+    DM=0;
+    for(int i=0; i<Adim; i++){
+      for(int j=0; j<Adim; j++){
+	temp2=0;
+	for(int k=0; k<Bdim; k++){
+	  temp2 += SuperMat(i,k)*SuperMat(j,k);
+	}
+	DM(i,j) = temp2;
+      }
+    }
+    
+    //Diagonalizing the RDM
+    while(dd.size()>0){dd.erase(dd.begin());}
+    diagWithLapack_R(DM,dd); 
+    renyi=0; vN=0; temp5=0;
+    
+    for(int s=0;s<dd.size();s++){
+      if(dd[s]<0){dd[s]=0;}
+      temp5=log(dd[s]);
+      if(!(temp5>-1000000000)){temp5=0;}
+      vN+=-dd[s]*temp5;
+      if(abs(dd[s])<1e-15){dd[s]=0;}
+      renyi+=pow(dd[s],alpha);
+      //   cout << vN << endl;
+    }    
+
+    if(alpha==1.0){temp6 = vN;}
+    else{temp6 = 1./(1.-alpha)*log(renyi);}
+    ents(1)+=temp6;
+    if(Asite<(Nsite+1)/2){ ents(1)+=temp6;}
+  }
 }
 #endif

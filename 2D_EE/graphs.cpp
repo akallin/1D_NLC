@@ -184,9 +184,13 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	for(int b=0;b<=xMax;b++){
 	  tempGraph.RealSpaceCoordinates[b].resize(yMax+1);
 	}
-	if(subSize>1 && (xMax+1)*(yMax+1)!=tempGraph.NumberSites){cout << xMax << " " << yMax << "  " << (xMax+1)*(yMax+1) << " ERROR! " << tempGraph.NumberSites << endl; exit(1);}
+	if(subSize>1 && (xMax+1)*(yMax+1)!=tempGraph.NumberSites){
+	  cout << xMax << " " << yMax << "  " << (xMax+1)*(yMax+1)
+	       << " ERROR! " << tempGraph.NumberSites << endl; 
+	  exit(1);
+	}
 	
-	//create the matrix of real space coordinates!
+	//create the matrix of real space coordinates
 	int tempX(-1), tempY(-1);
 	for(int b=0;b<tempGraph.NumberSites;b++){
 	  ss >> teststring;
@@ -198,6 +202,14 @@ void ReadGraphsFromFile( vector< graph > & graphList, const string & file)
 	  tempGraph.RealSpaceCoordinates[tempX][tempY]=b;
 	  //  cout << "("<<tempX<<","<<tempY<<")\n";
 	}
+	/*---Test to see if all entries are filled
+	  for(int x=0;x<=xMax;x++){
+	  for(int y=0;y<=yMax;y++){
+	  cout << tempGraph.RealSpaceCoordinates[x][y] << " ";
+	  }
+	  cout << endl;
+	  }
+	----------------------------------------*/
 	ss.str("");
 	ss.clear();
 
