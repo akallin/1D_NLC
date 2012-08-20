@@ -201,11 +201,19 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   int xSize(0), ySize(0);
 
   // ------ Line Terms!! ------
-  
   // ---- Horizontal ----
-  
+  ySize = yMax;
+  // is it xSize<xMax or xSize<xMax-1???
+  for(int xSize=1; xSize<xMax; xSize++){
+    // iterate over region A, adding sites to region A & B
+    // gotta figure out the binary numbers that we can "AND" to get the states
+  }
+  // Make the SuperMat of Eigs (as in 1d example)
+  // Figure out dimensions of region A,B (xSize * ySize)
+  // If it's > xMax * yMax/2 then switch regions A and B
+  // In the future we can just multiply all renyis by 2 except the middle one for an even system.
 
-  // --- Figure out Dimensions of Regions A and B ---
+
 
 
   // ---- Vertical ----
