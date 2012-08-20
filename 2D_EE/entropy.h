@@ -191,7 +191,7 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   //cout << endl;
 }
 
-inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag)
+inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag, int xMax, int yMax)
 {
 
   // Gotta pass in the graph dimension!!!!!!
@@ -201,11 +201,6 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
   // Get number of sites from the dimension
   int Nsite = log2(Dim); 
-
-  // Number of Sites
-  // Dimensions of the graph
-  int xMax = filegraphs.at(i).RealSpaceCoordinates.size();
-  int yMax = filegraphs.at(i).RealSpaceCoordinates[0].size();
 
   // The dimensions of region A
   int xSize(0), ySize(0), Adim(0), Bdim(0);
