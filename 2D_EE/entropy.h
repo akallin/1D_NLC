@@ -206,6 +206,22 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   // Get number of sites from the dimension
   int Nsite = log2(Dim); 
 
+
+  // -8-8-8-8- Measure the Magnetization!!! -8-8-8-8-
+  long double magnetization(0);
+  int itemp(0);
+
+  for(int i=0; i<Dim; i++){ 
+    for (int sp=0; sp<Nsite; sp++){
+      itemp += (i>>sp)&1; 
+    }
+    magnetization += abs(itemp*2-Nsite)*eigs(i)*eigs(i);
+    itemp=0;
+  }
+  // mag was passed by ref to the function, so this is what it returns
+  mag = magnetization;
+  // -8-8-8-8- End of Magnetization -8-8-8-8-
+
   // The dimensions of region A
   int xSize(0), ySize(0), Adim(0), Bdim(0);
 
@@ -218,6 +234,8 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   int spinState(-1);         // The state of that spin
   int aState(0), bState(0);  // The basis states for reg A and B extracted from the full basis
 
+  // make the entropy vector a nonzero size
+  ents.resize(1,0);
   ents(0) = 0;
   // ------ Line Terms!! ------
   
@@ -281,10 +299,12 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
       bState = bState>>1;
 
       SuperMat[aState][bState] = eigs(i);
-
-      // ------ GET ENTROPY!!! ------
-      ents(0) += -(xMax-1)*getEE(alpha, SuperMat);
     }
+    
+    // ------ GET ENTROPY!!! ------
+    ents(0) += -(xMax-1)*getEE(alpha, SuperMat);
+    //cout << "Adim " << Adim << "  Bdim " << Bdim << "  Hent=" << getEE(alpha,SuperMat) <<endl;
+      
   
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
   }
@@ -350,11 +370,11 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
       bState = bState>>1;
 
       SuperMat[aState][bState] = eigs(i);
-
-      // ------ GET ENTROPY!!! ------
-      ents(0) += -(yMax-1)*getEE(alpha, SuperMat);
-      
     }
+     
+    // ------ GET ENTROPY!!! ------
+    ents(0) += -(yMax-1)*getEE(alpha, SuperMat);
+    
   }
 
   // -*-*-*-*-*- Corner Terms!! -*-*-*-*-*-
@@ -418,11 +438,11 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
 	bState = bState>>1;
 	
 	SuperMat[aState][bState] = eigs(i);
-	
-	// ------ GET ENTROPY!!! ------
-	ents(0) += 2*getEE(alpha, SuperMat);
-	
       }
+      
+      // ------ GET ENTROPY!!! ------
+      ents(0) += 2*getEE(alpha, SuperMat);
+	    
     }
   }
 }

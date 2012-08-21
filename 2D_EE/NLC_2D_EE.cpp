@@ -36,6 +36,7 @@ int main(){
     double h;
 
     Array<l_double,1> eVec;
+    eVec.resize(2,0);
     Array<long double,1> entVec;
 
     J=prm.JJ_;
@@ -76,7 +77,7 @@ int main(){
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightEntropy.push_back(0);
-      WeightMagnetization.push_back(1);
+      WeightMagnetization.push_back(0);
       RunningSumEnergy = WeightEnergy[0];      
       RunningSumEntropy = 0;
       RunningSumMagnetization = WeightMagnetization.back();
@@ -89,7 +90,7 @@ int main(){
       //RunningSumEnergy+=WeightEnergy.back();
       //RunningSumEntropy+=WeightEntropy.back();
 
-      for (int i=1; i<fileGraphs.size()-4; i++){ //skip the zeroth graph
+      for (int i=1; i<fileGraphs.size(); i++){ //skip the zeroth graph
   	
 	//---Generate the Hamiltonian---
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
@@ -107,8 +108,8 @@ int main(){
 	
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
-	Entropy1D(alpha,eVec, entVec, mag);
-	Entropy2D(alpha,eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
+	//	Entropy1D(alpha, eVec, entVec, mag);
+	Entropy2D(alpha, eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
 	
 	WeightEntropy.push_back(entVec(0));
 	WeightMagnetization.push_back(mag);
