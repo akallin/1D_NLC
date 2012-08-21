@@ -240,7 +240,8 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 	tempSpin = tempState&1;
 
 	//Use the RealSpaceCoords to figure out if it's in region A or B
-	
+	//if(
+
 	// Throw out the spin we just looked at
 	tempState = tempState>>1;
       }
