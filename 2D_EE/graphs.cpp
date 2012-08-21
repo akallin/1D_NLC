@@ -27,7 +27,7 @@ graph::graph(vector< pair<int, int> > & AdjList, int IdentNumber, int order, int
 }
 
 graph::graph(vector< pair<int, int> > & AdjList, int IdentNumber, int order, int edgeCount, 
-	     int LattConst, bool Field, vector< pair<int, int> > & subgraphs, vector< vector< int > > embeddings )
+	     int LattConst, bool Field, vector< pair<int, int> > & subgraphs, vector< vector< int > > & embeddings )
 {
     AdjacencyList = AdjList;
     Identifier = IdentNumber;

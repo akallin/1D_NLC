@@ -23,7 +23,7 @@ class graph
 
         graph();
   graph(vector< pair<int, int> > & , int, int, int, int, bool, vector< pair<int, int> > & );
-  graph(vector< pair<int, int> > & , int, int, int, int, bool, vector<pair< int, int> > &, vector< vector< int > > );
+  graph(vector< pair<int, int> > & , int, int, int, int, bool, vector<pair< int, int> > &, vector< vector< int > > & );
 
         graph& operator=(const graph & other);
         bool operator==(const graph & other);

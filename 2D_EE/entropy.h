@@ -191,8 +191,12 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   //cout << endl;
 }
 
-inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag, int xMax, int yMax)
+inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag, vector< vector< int > >& RScoords)
 {
+  // Get the graph dimensions from the realspace coordinates
+  int xMax = RScoords.size();
+  int yMax = RScoords[0].size();
+
   // The dimension is number of eigenvalues
   long int Dim = eigs.size();
 
@@ -209,6 +213,9 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   Array<double,2> DM(Adim,Adim);
   Array<double,2> DMsq(Adim,Adim);
 
+  // Some temp variables;
+  int tempSpin(-1), tempState(-1);
+
   // ------ Line Terms!! ------
   // ---- Horizontal ----
   xSize = xMax;
@@ -221,12 +228,34 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
     // Initialize the matrix of eigenvalues
     SuperMat.resize(Adim,Bdim); 
     SuperMat=0;
-  }
+
+    // Loop over all the basis states
+    for(int i=0; i<Dim; i++){      
+      // extractifying the region A and region B states
+      tempState = i;
+      // Loop over the spins
+      for(int j=0; j<Nsite; j++){
+
+	// Extract the state of the spin on the end
+	tempSpin = tempState&1;
+
+	//Use the RealSpaceCoords to figure out if it's in region A or B
+	
+	// Throw out the spin we just looked at
+	tempState = tempState>>1;
+      }
+
+      //SuperMat(a,b) = eigs(i);
+
+    
+    // Extract Region A state and Region B state
+    }
+  
   // Make the SuperMat of Eigs (as in 1d example)
   // Figure out dimensions of region A,B (xSize * ySize)
-  // If it's > xMax * yMax/2 then switch regions A and B
+  // If it's > xMax * yMax/2 then switch regions A and B (just multiply the SuperMats the other way!)
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
-
+  }
 
 
 
@@ -234,5 +263,5 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
   // ------ Corner Terms!! ------
 
-}
+  }
 #endif

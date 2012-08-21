@@ -108,7 +108,7 @@ int main(){
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
 	Entropy1D(alpha,eVec, entVec, mag);
-	Entropy2D(alpha,eVec, entVec, mag,fileGraphs.at(i).RealSpaceCoordinates.size(),fileGraphs.at(i).RealSpaceCoordinates[0].size());
+	Entropy2D(alpha,eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
 	WeightEntropy.push_back(entVec(1));
 	WeightMagnetization.push_back(mag);
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
