@@ -193,9 +193,6 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
 inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag, int xMax, int yMax)
 {
-
-  // Gotta pass in the graph dimension!!!!!!
-
   // The dimension is number of eigenvalues
   long int Dim = eigs.size();
 
@@ -216,10 +213,10 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   // ---- Horizontal ----
   xSize = xMax;
   // Iterate over the horizontal cuts
-  for(int ySize=1; ySize<yMax; xSize++){
+  for(int ySize=1; ySize<yMax; ySize++){
     // Get the dimensions of region A and B;
-    Adim = 1<<xSize*ySize;  cout << "Adim=" << Adim;
-    Bdim = Dim/Adim; cout << " Bdim=" << Bdim << endl;
+    Adim = 1<<xSize*ySize; 
+    Bdim = Dim/Adim; 
 
     // Initialize the matrix of eigenvalues
     SuperMat.resize(Adim,Bdim); 
