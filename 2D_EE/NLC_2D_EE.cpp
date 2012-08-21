@@ -36,7 +36,7 @@ int main(){
     double h;
 
     Array<l_double,1> eVec;
-    Array<l_double,1> entVec;
+    Array<long double,1> entVec;
 
     J=prm.JJ_;
     h=prm.hh_;
@@ -61,8 +61,8 @@ int main(){
 
 
     double hvals[31] = {.2,.3,.4,.5,.6,.7,.8,.85,.875,.9375,.96875,.9999,1.0001,1.03125,1.0625,1.125,1.25,1.5,1.75,2.0,2.5,3,
-			3.5,4,4.5,5,6,8,10,20,2000};
-    //double hvals[1] = {1};
+    			3.5,4,4.5,5,6,8,10,20,2000};
+    //   double hvals[1] = {1};
     //    double alphas[6] = {0.5,0.75,1.0,1.5,2.0,2.5};
     double alphas[1]={2};
     double alpha = 2.0;
@@ -109,6 +109,7 @@ int main(){
 	WeightEnergy.push_back(energy);
 	Entropy1D(alpha,eVec, entVec, mag);
 	Entropy2D(alpha,eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
+	
 	WeightEntropy.push_back(entVec(1));
 	WeightMagnetization.push_back(mag);
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;

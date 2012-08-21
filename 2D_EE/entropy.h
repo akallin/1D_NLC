@@ -2,6 +2,9 @@
 #ifndef entropy_H
 #define entropy_H
 
+long double getEE( double alpha, vector< vector<long double> > SuperMat );
+
+
 inline double TwoSiteEntropy(double h, double alpha)
 {
   double CommonEnt;
@@ -23,7 +26,7 @@ inline double TwoSiteEntropy(double h, double alpha)
   }
 }
 
-inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag)
+inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<long double,1>& ents, double& mag)
 {
   // The dimension is number of eigenvalues
   long int Dim = eigs.size();
@@ -191,7 +194,7 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   //cout << endl;
 }
 
-inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& ents, double& mag, vector< vector< int > >& RScoords)
+inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1>& ents, double& mag, vector< vector< int > >& RScoords)
 {
   // Get the graph dimensions from the realspace coordinates
   int xMax = RScoords.size();
@@ -278,10 +281,10 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
       SuperMat[aState][bState] = eigs(i);
 
-      // ------ GET ENTROPY!!! ------ maybe write a function to do thing
+      // ------ GET ENTROPY!!! ------
+      ents[0] += -(xMax-1)*getEE(alpha, SuperMat);     
     }
   
-  // If it's > xMax * yMax/2 then switch regions A and B (just multiply the SuperMats the other way!)
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
   }
 
@@ -347,7 +350,9 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
       SuperMat[aState][bState] = eigs(i);
 
-      // ------ GET ENTROPY!!! ------ maybe write a function to do thing
+      // ------ GET ENTROPY!!! ------
+      ents[0] += -(yMax-1)*getEE(alpha, SuperMat);
+      
     }
   }
 
@@ -413,13 +418,15 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 	
 	SuperMat[aState][bState] = eigs(i);
 	
-	// ------ GET ENTROPY!!! ------ maybe write a function to do thing
+	// ------ GET ENTROPY!!! ------
+	ents[0] += 2*getEE(alpha, SuperMat);
+	
       }
     }
   }
 }
 
-inline long double getEE( double alpha, vector< vector<long double> > SuperMat ){
+long double getEE( double alpha, vector< vector<long double> > SuperMat ){
   
   // The Density Matrix
   Array <double,2> DM;
