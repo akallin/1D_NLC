@@ -221,7 +221,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 
   // ------ Line Terms!! ------
   
-  // ---- Horizontal ----
+  // -*-*-*- Horizontal -*-*-*-
   xSize = xMax;
   // Iterate over the horizontal cuts
   for(int ySize=1; ySize<yMax; ySize++){
@@ -290,8 +290,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   }
 
 
-
-  // ---- Vertical ----
+  // -*-*-*- Vertical -*-*-*-
   ySize = yMax;
   // Iterate over the vectical cuts
   for(int xSize=1; xSize<xMax; xSize++){
@@ -356,7 +355,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
     }
   }
 
-  // ------ Corner Terms!! ------
+  // -*-*-*-*-*- Corner Terms!! -*-*-*-*-*-
   // Iterate over the corner cuts
   for(int ySize=1; ySize<yMax; ySize++){
     for(int xSize=1; xSize<xMax; xSize++){
@@ -422,5 +421,11 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
       }
     }
   }
+}
+
+inline long double getEE(){
+  long double EE(0);
+
+  return EE;
 }
 #endif
