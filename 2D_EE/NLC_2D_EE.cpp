@@ -110,7 +110,7 @@ int main(){
 	Entropy1D(alpha,eVec, entVec, mag);
 	Entropy2D(alpha,eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
 	
-	WeightEntropy.push_back(entVec(1));
+	WeightEntropy.push_back(entVec(0));
 	WeightMagnetization.push_back(mag);
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 

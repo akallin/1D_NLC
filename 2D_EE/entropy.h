@@ -218,6 +218,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   int spinState(-1);         // The state of that spin
   int aState(0), bState(0);  // The basis states for reg A and B extracted from the full basis
 
+  ents[0] = 0;
   // ------ Line Terms!! ------
   
   // -*-*-*- Horizontal -*-*-*-
@@ -282,7 +283,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
       SuperMat[aState][bState] = eigs(i);
 
       // ------ GET ENTROPY!!! ------
-      ents[0] += -(xMax-1)*getEE(alpha, SuperMat);     
+      ents[0] += -(xMax-1)*getEE(alpha, SuperMat);
     }
   
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
@@ -438,7 +439,6 @@ long double getEE( double alpha, vector< vector<long double> > SuperMat ){
   if(SuperMat.size()>SuperMat[0].size()){
     Dim = SuperMat[0].size();
     DM.resize(Dim,Dim);
-    Dim = 0;
     for(int i=0; i<Dim; i++){
       for(int j=0; j<Dim; j++){
 	temp=0;
@@ -453,14 +453,13 @@ long double getEE( double alpha, vector< vector<long double> > SuperMat ){
   else{
     Dim = SuperMat.size();
     DM.resize(Dim,Dim);
-    Dim = 0;
     for(int i=0; i<Dim; i++){
       for(int j=0; j<Dim; j++){
 	temp=0;
 	for(int k=0; k<SuperMat[0].size(); k++){
 	  temp += SuperMat[i][k]*SuperMat[j][k];
 	}
-	DM(i,j) = temp;
+	DM(i,j) = temp; 
       }
     }
   }
@@ -480,7 +479,6 @@ long double getEE( double alpha, vector< vector<long double> > SuperMat ){
   for(int s=0; s<dd.size(); s++){
 
     if(dd[s]<0){dd[s]=0;} // All eigs should be positive.  If not it's rounding error.
-    
     // If dd[s] is a verrrrry small number, it's probably zero.
     temp=log(dd[s]); 
     if(!(temp>-1000000000)){temp=0;}
