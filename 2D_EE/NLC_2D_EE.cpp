@@ -36,7 +36,6 @@ int main(){
     double h;
 
     Array<l_double,1> eVec;
-    eVec.resize(2,0);
     Array<long double,1> entVec;
 
     J=prm.JJ_;
@@ -51,7 +50,7 @@ int main(){
     double RunningSumEntropy(0), RunningSumMagnetization;
     double mag;
 
-    ReadGraphsFromFile(fileGraphs, "order6rectangles.dat");
+    ReadGraphsFromFile(fileGraphs, "order16rectangles.dat");
     //ReadGraphsFromFile(fileGraphs,"L16pbc.dat");
 
     ofstream fout("output_1D.dat");
@@ -61,8 +60,7 @@ int main(){
     J=1;     
 
 
-    double hvals[31] = {.2,.3,.4,.5,.6,.7,.8,.85,.875,.9375,.96875,.9999,1.0001,1.03125,1.0625,1.125,1.25,1.5,1.75,2.0,2.5,3,
-    			3.5,4,4.5,5,6,8,10,20,2000};
+    double hvals[20] = {0.2,0.5,1,2,2.5,3.04,3.043,3.044,3.04405,3.0441,3.04415,3.0442,3.045,3.05,4,6,8,10,20,2000};
     //   double hvals[1] = {1};
     //    double alphas[6] = {0.5,0.75,1.0,1.5,2.0,2.5};
     double alphas[1]={2};
@@ -70,7 +68,7 @@ int main(){
     for(int q1=0;q1<1;q1++){ alpha = alphas[q1];
       //cout << "-----------------------------------" << endl << "S_"<<alpha<<endl;
       
-    for(int hh=0; hh<31; hh++){
+    for(int hh=0; hh<20; hh++){
       h=hvals[hh];  
       //cout <<  "h= " <<h <<" " << endl;
 
