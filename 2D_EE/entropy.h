@@ -214,7 +214,10 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   Array<double,2> DMsq(Adim,Adim);
 
   // Some temp variables;
-  int tempSpin(-1), tempState(-1);
+  int tempState(-1);         // The current full basis state we're looking at
+  int tempSpin(-1);          // The number of the spin that's currently being extracted
+  int spinState(-1);         // The state of that spin
+  int aState(0), bState(0);  // The basis states for reg A and B extracted from the full basis
 
   // ------ Line Terms!! ------
   // ---- Horizontal ----
@@ -233,27 +236,50 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
     for(int i=0; i<Dim; i++){      
       // extractifying the region A and region B states
       tempState = i;
-      // Loop over the spins
-      for(int j=0; j<Nsite; j++){
+      
+      // Loop over region A
+      aState=0; // Initialize the state in region A
+      for(int y=0; y<ySize; y++){
+	for(int x=0; x<xSize; x++){
 
-	// Extract the state of the spin on the end
-	tempSpin = tempState&1;
+	  tempSpin = RScoords[x][y];
 
-	//Use the RealSpaceCoords to figure out if it's in region A or B
-	//if(
+	  // Extract the state of tempSpin
+	  spinState = ((tempState&(1<<tempSpin))>>tempSpin);
 
-	// Throw out the spin we just looked at
-	tempState = tempState>>1;
-      }
+	  // Add the spin state to region A
+	  aState += spinState;
 
-      //SuperMat(a,b) = eigs(i);
+	  // Shift the bits by 1 (for the next site)
+	  aState = aState<<1;
+	}
+      }	
+      // Unshift aState by 1 (because there was one extra)
+      aState = aState>>1;
 
-    
-    // Extract Region A state and Region B state
+      // Loop over region B (note y starts at ySize)
+      bState=0; // Initialize the state in region B
+      for(int y=ySize; y<yMax; y++){
+	for(int x=0; x<xSize; x++){
+
+	  tempSpin = RScoords[x][y];
+
+	  // Extract the state of tempSpin
+	  spinState = ((tempState&(1<<tempSpin))>>tempSpin);
+
+	  // Add the spin state to region B
+	  bState += spinState;
+
+	  // Shift the bits by 1 (for the next site)
+	  bState = bState<<1;
+	}
+      }	
+      // Unshift bState by 1 (because there was one extra)
+      bState = bState>>1;
+
+      SuperMat(aState,bState) = eigs(i);
     }
   
-  // Make the SuperMat of Eigs (as in 1d example)
-  // Figure out dimensions of region A,B (xSize * ySize)
   // If it's > xMax * yMax/2 then switch regions A and B (just multiply the SuperMats the other way!)
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
   }
