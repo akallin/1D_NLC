@@ -207,11 +207,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   int xSize(0), ySize(0), Adim(0), Bdim(0);
 
   // A rectangular matrix containing the eigenvalues, used to get the RDM
-  Array<long double,2> SuperMat;
-
-  // The RDM (SuperMat squared) and RDM squared
-  Array<double,2> DM(Adim,Adim);
-  Array<double,2> DMsq(Adim,Adim);
+  vector< vector< long double > > SuperMat;
 
   // Some temp variables;
   int tempState(-1);         // The current full basis state we're looking at
@@ -230,8 +226,8 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
     Bdim = Dim/Adim; 
 
     // Initialize the matrix of eigenvalues
-    SuperMat.resize(Adim,Bdim); 
-    SuperMat=0;
+    SuperMat.resize(Adim);
+    for(int q=0; q<Adim; q++){ SuperMat[q].resize(Bdim); }
 
     // Loop over all the basis states
     for(int i=0; i<Dim; i++){      
@@ -280,7 +276,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
       // Unshift bState by 1 (because there was one extra)
       bState = bState>>1;
 
-      SuperMat(aState,bState) = eigs(i);
+      SuperMat[aState][bState] = eigs(i);
 
       // ------ GET ENTROPY!!! ------ maybe write a function to do thing
     }
@@ -299,9 +295,9 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
     Bdim = Dim/Adim; 
 
     // Initialize the matrix of eigenvalues
-    SuperMat.resize(Adim,Bdim); 
-    SuperMat=0;
-
+    SuperMat.resize(Adim);
+    for(int q=0; q<Adim; q++){ SuperMat[q].resize(Bdim); }
+  
     // Loop over all the basis states
     for(int i=0; i<Dim; i++){      
       // extractifying the region A and region B states
@@ -349,7 +345,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
       // Unshift bState by 1 (because there was one extra)
       bState = bState>>1;
 
-      SuperMat(aState,bState) = eigs(i);
+      SuperMat[aState][bState] = eigs(i);
 
       // ------ GET ENTROPY!!! ------ maybe write a function to do thing
     }
@@ -364,8 +360,8 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
       Bdim = Dim/Adim; 
 
       // Initialize the matrix of eigenvalues
-      SuperMat.resize(Adim,Bdim); 
-      SuperMat=0;
+      SuperMat.resize(Adim);
+      for(int q=0; q<Adim; q++){ SuperMat[q].resize(Bdim); }
       
       // Loop over all the basis states
       for(int i=0; i<Dim; i++){      
@@ -415,7 +411,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
 	// Unshift bState by 1 (because there was one extra)
 	bState = bState>>1;
 	
-	SuperMat(aState,bState) = eigs(i);
+	SuperMat[aState][bState] = eigs(i);
 	
 	// ------ GET ENTROPY!!! ------ maybe write a function to do thing
       }
@@ -423,8 +419,75 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<l_double,1>& 
   }
 }
 
-inline long double getEE(){
+inline long double getEE( double alpha, vector< vector<long double> > SuperMat ){
+  
+  // The Density Matrix
+  Array <double,2> DM;
+  long double temp(0);
+  int Dim(0);
+
+  // Using SuperMat to get the density matrix
+  // If Adim > Bdim TRANSPOSE!!
+  if(SuperMat.size()>SuperMat[0].size()){
+    Dim = SuperMat[0].size();
+    DM.resize(Dim,Dim);
+    Dim = 0;
+    for(int i=0; i<Dim; i++){
+      for(int j=0; j<Dim; j++){
+	temp=0;
+	for(int k=0; k<SuperMat.size(); k++){
+	  temp += SuperMat[k][i]*SuperMat[k][j];
+	}
+	DM(i,j) = temp;
+      }
+    }
+  }
+  // Otherwise, use Adim
+  else{
+    Dim = SuperMat.size();
+    DM.resize(Dim,Dim);
+    Dim = 0;
+    for(int i=0; i<Dim; i++){
+      for(int j=0; j<Dim; j++){
+	temp=0;
+	for(int k=0; k<SuperMat[0].size(); k++){
+	  temp += SuperMat[i][k]*SuperMat[j][k];
+	}
+	DM(i,j) = temp;
+      }
+    }
+  }
+
+  // Eigenvalues of the RDM get put in dd
+  vector<double> dd;
+  
+  //Diagonalizing the RDM
+  while(dd.size()>0){dd.erase(dd.begin());}
+  diagWithLapack_R(DM,dd);
+ 
   long double EE(0);
+  long double vN(0), renyi(0); 
+  temp=0;
+  
+  // Loop over the eigenvalues
+  for(int s=0; s<dd.size(); s++){
+
+    if(dd[s]<0){dd[s]=0;} // All eigs should be positive.  If not it's rounding error.
+    
+    // If dd[s] is a verrrrry small number, it's probably zero.
+    temp=log(dd[s]); 
+    if(!(temp>-1000000000)){temp=0;}
+    
+    vN += -dd[s]*temp;
+ 
+    // Same problem. If they're too small they get set to 0.
+    if(abs(dd[s])<1e-15){dd[s]=0;}
+
+    renyi+=pow(dd[s],alpha);
+  }    
+  
+  if(alpha==1.0){EE = vN;}
+  else{EE = 1./(1.-alpha)*log(renyi);}
 
   return EE;
 }
