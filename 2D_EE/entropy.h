@@ -218,7 +218,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   int spinState(-1);         // The state of that spin
   int aState(0), bState(0);  // The basis states for reg A and B extracted from the full basis
 
-  ents[0] = 0;
+  ents(0) = 0;
   // ------ Line Terms!! ------
   
   // -*-*-*- Horizontal -*-*-*-
@@ -283,7 +283,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
       SuperMat[aState][bState] = eigs(i);
 
       // ------ GET ENTROPY!!! ------
-      ents[0] += -(xMax-1)*getEE(alpha, SuperMat);
+      ents(0) += -(xMax-1)*getEE(alpha, SuperMat);
     }
   
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
@@ -352,7 +352,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
       SuperMat[aState][bState] = eigs(i);
 
       // ------ GET ENTROPY!!! ------
-      ents[0] += -(yMax-1)*getEE(alpha, SuperMat);
+      ents(0) += -(yMax-1)*getEE(alpha, SuperMat);
       
     }
   }
@@ -420,7 +420,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
 	SuperMat[aState][bState] = eigs(i);
 	
 	// ------ GET ENTROPY!!! ------
-	ents[0] += 2*getEE(alpha, SuperMat);
+	ents(0) += 2*getEE(alpha, SuperMat);
 	
       }
     }
