@@ -68,15 +68,16 @@ int main(){
     for(int q1=0;q1<1;q1++){ alpha = alphas[q1];
       //cout << "-----------------------------------" << endl << "S_"<<alpha<<endl;
       
-    for(int hh=0; hh<20; hh++){
-      h=hvals[hh];  
+    for(double hh=0.1; hh<10; hh+=0.1){
+      //h=hvals[hh];  
+      h = hh;
       //cout <<  "h= " <<h <<" " << endl;
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightEntropy.push_back(0);
-      WeightMagnetization.push_back(0);
-      RunningSumEnergy = WeightEnergy[0];      
+      WeightMagnetization.push_back(1.);
+      RunningSumEnergy = WeightEnergy.back();      
       RunningSumEntropy = 0;
       RunningSumMagnetization = WeightMagnetization.back();
       
@@ -93,8 +94,8 @@ int main(){
 	//---Generate the Hamiltonian---
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,h<1.0); 
-	//GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
-	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,1); 
+	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
+	//GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,1); 
 	
 
 	LANCZOS lancz(HV.Vdim);  //dimension of Hilbert space
