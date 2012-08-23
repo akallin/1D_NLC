@@ -236,8 +236,9 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   long double tempEnt;
 
   // make the entropy vector a nonzero size
-  ents.resize(1,0);
+  ents.resize(2,0);
   ents(0) = 0;
+  ents(1) = 0;
   // ------ Line Terms!! ------
   
   // -*-*-*- Horizontal -*-*-*-
@@ -303,16 +304,17 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
     }
     
     // ------ GET ENTROPY!!! ------
-    tempEnt = -(xMax-1)*getEE(alpha,SuperMat);
-    ents(0) += tempEnt;
-    if(ySize<(yMax+1)/2){ ents(0)+=tempEnt; }
+    tempEnt = (xMax-1)*getEE(alpha,SuperMat);
+    ents(0) += -tempEnt;
+    ents(1) += tempEnt;
+    
+    if(ySize<(yMax+1)/2){ ents(0)+= -tempEnt; ents(1) += tempEnt;}
 
     //cout << "Adim " << Adim << "  Bdim " << Bdim << "  Hent=" << getEE(alpha,SuperMat) <<endl;
       
   
   // In the future we can just multiply all renyis by 2 except the middle one for an even system.
   }
-
 
   // -*-*-*- Vertical -*-*-*-
   ySize = yMax;

@@ -68,9 +68,9 @@ int main(int argc, char** argv){
     vector< graph > fileGraphs; //graph objects
     
     vector<double> WeightEnergy;
-    vector<double> WeightEntropy, WeightMagnetization;
+    vector<double> WeightLineEntropy, WeightCornerEntropy, WeightMagnetization;
     double RunningSumEnergy(0);
-    double RunningSumEntropy(0), RunningSumMagnetization;
+    double RunningSumLineEntropy(0), RunningSumCornerEntropy(0), RunningSumMagnetization;
     double mag;
 
     ReadGraphsFromFile(fileGraphs, InputFile);
@@ -81,9 +81,11 @@ int main(int argc, char** argv){
     
     J=1;     
 
-    const int numhVals = 1;
-    //double hvals[numhVals] = {0.2,0.5,1,2,2.5,3.04,3.043,3.044,3.04405,3.0441,3.04415,3.0442,3.045,3.05,4,6,8,10,20,2000};
-    double hvals[numhVals] = {3.0441};
+    const int numhVals = 22;
+
+    //22 values
+    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
+    //double hvals[numhVals] = {3.0441};
     //    double alphas[6] = {0.5,0.75,1.0,1.5,2.0,2.5};
     double alphas[1]={2};
     double alpha = 2.0;
@@ -97,10 +99,12 @@ int main(int argc, char** argv){
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
-      WeightEntropy.push_back(0);
+      WeightLineEntropy.push_back(0);
+      WeightCornerEntropy.push_back(0);
       WeightMagnetization.push_back(1.);
       RunningSumEnergy = WeightEnergy.back();      
-      RunningSumEntropy = 0;
+      RunningSumLineEntropy = 0;
+      RunningSumCornerEntropy = 0;
       RunningSumMagnetization = WeightMagnetization.back();
       
       //Two Site Graph
@@ -133,32 +137,38 @@ int main(int argc, char** argv){
 	//	Entropy1D(alpha, eVec, entVec, mag);
 	Entropy2D(alpha, eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
 	
-	WeightEntropy.push_back(entVec(0));
+	WeightLineEntropy.push_back(entVec(1));
+	WeightCornerEntropy.push_back(entVec(0));
 	WeightMagnetization.push_back(mag);
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 
 	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++){
 	  WeightEnergy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEnergy[fileGraphs.at(i).SubgraphList[j].first];
-	  WeightEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEntropy[fileGraphs.at(i).SubgraphList[j].first];
+	  WeightLineEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightLineEntropy[fileGraphs.at(i).SubgraphList[j].first];
+	  WeightCornerEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightCornerEntropy[fileGraphs.at(i).SubgraphList[j].first];	  
 	  WeightMagnetization.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightMagnetization[fileGraphs.at(i).SubgraphList[j].first];
 	}
 
 	// cout<<"h="<<h<<" J="<<J<<" graph #"<<i<<" energy "<<setprecision(12)<<energy<<endl;
 	// cout<<"WeightHigh["<<i<<"] = "<<WeightHigh.back()<<endl;
 	RunningSumEnergy += WeightEnergy.back()*fileGraphs.at(i).LatticeConstant;
-	RunningSumEntropy += WeightEntropy.back()*fileGraphs.at(i).LatticeConstant;
+	RunningSumLineEntropy += WeightLineEntropy.back()*fileGraphs.at(i).LatticeConstant;
+	RunningSumCornerEntropy += WeightCornerEntropy.back()*fileGraphs.at(i).LatticeConstant;
 	RunningSumMagnetization += WeightMagnetization.back()*fileGraphs.at(i).LatticeConstant;
 	//	cout <<"S_ " <<alpha <<" h= "<< h<< " RunningSumEnergy " << i <<" "<< RunningSumEnergy << " Entropy= " << RunningSumEntropy 
 	//  << " Magnetization= " << RunningSumMagnetization << endl;
       }
       
-      cout<<"S_"<<alpha<<" h= " <<h<<" Energy= "<<RunningSumEnergy<<" Entropy= "<<RunningSumEntropy<<" Magnetization= "<<RunningSumMagnetization<<endl;
+      cout<<"S_"<<alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
+	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
       
       WeightEnergy.clear();
-      WeightEntropy.clear();
+      WeightLineEntropy.clear();
+      WeightCornerEntropy.clear();
       WeightMagnetization.clear();
       RunningSumEnergy=0;
-      RunningSumEntropy=0;
+      RunningSumLineEntropy=0;
+      RunningSumCornerEntropy=0;
       RunningSumMagnetization=0;
     }
     }
