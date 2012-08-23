@@ -317,7 +317,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   // -*-*-*- Vertical -*-*-*-
   ySize = yMax;
   // Iterate over the vectical cuts
-  for(int xSize=1; xSize<xMax; xSize++){
+  for(int xSize=1; xSize<=xMax/2; xSize++){
     // Get the dimensions of region A and B;
     Adim = 1<<xSize*ySize; 
     Bdim = Dim/Adim; 
@@ -377,7 +377,9 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
     }
      
     // ------ GET ENTROPY!!! ------
-    ents(0) += -(yMax-1)*getEE(alpha, SuperMat);
+    tempEnt = -(yMax-1)*getEE(alpha,SuperMat);
+    ents(0) += tempEnt;
+    if(xSize<(xMax+1)/2){ ents(0)+=tempEnt; }
     
   }
 
@@ -419,7 +421,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
 	// Unshift aState by 1 (because there was one extra)
 	aState = aState>>1;
 
-	// Loop over region B (note y starts at ySize)
+	// Loop over region B (loop over whole state, but do nothing when in region A)
 	bState=0; // Initialize the state in region B
 	for(int y=0; y<yMax; y++){
 	  for(int x=0; x<xMax; x++){

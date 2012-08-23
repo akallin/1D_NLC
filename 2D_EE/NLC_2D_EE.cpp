@@ -50,7 +50,7 @@ int main(){
     double RunningSumEntropy(0), RunningSumMagnetization;
     double mag;
 
-    ReadGraphsFromFile(fileGraphs, "order6rectangles.dat");
+    ReadGraphsFromFile(fileGraphs, "order10rectangles.dat");
     //ReadGraphsFromFile(fileGraphs,"L16pbc.dat");
 
     ofstream fout("output_1D.dat");
