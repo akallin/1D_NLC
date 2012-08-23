@@ -50,7 +50,7 @@ int main(){
     double RunningSumEntropy(0), RunningSumMagnetization;
     double mag;
 
-    ReadGraphsFromFile(fileGraphs, "order20rectangles.dat");
+    ReadGraphsFromFile(fileGraphs, "order6rectangles.dat");
     //ReadGraphsFromFile(fileGraphs,"L16pbc.dat");
 
     ofstream fout("output_1D.dat");
@@ -94,8 +94,8 @@ int main(){
 	//---Generate the Hamiltonian---
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,h<1.0); 
-	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
-	//GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,1); 
+	//GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
+	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,1); 
 	
 
 	LANCZOS lancz(HV.Vdim);  //dimension of Hilbert space

@@ -233,6 +233,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   int tempSpin(-1);          // The number of the spin that's currently being extracted
   int spinState(-1);         // The state of that spin
   int aState(0), bState(0);  // The basis states for reg A and B extracted from the full basis
+  long double tempEnt;
 
   // make the entropy vector a nonzero size
   ents.resize(1,0);
@@ -242,7 +243,7 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   // -*-*-*- Horizontal -*-*-*-
   xSize = xMax;
   // Iterate over the horizontal cuts
-  for(int ySize=1; ySize<yMax; ySize++){
+  for(int ySize=1; ySize<=yMax/2; ySize++){
     // Get the dimensions of region A and B;
     Adim = 1<<xSize*ySize; 
     Bdim = Dim/Adim; 
@@ -302,7 +303,10 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
     }
     
     // ------ GET ENTROPY!!! ------
-    ents(0) += -(xMax-1)*getEE(alpha, SuperMat);
+    tempEnt = -(xMax-1)*getEE(alpha,SuperMat);
+    ents(0) += tempEnt;
+    if(ySize<(yMax+1)/2){ ents(0)+=tempEnt; }
+
     //cout << "Adim " << Adim << "  Bdim " << Bdim << "  Hent=" << getEE(alpha,SuperMat) <<endl;
       
   
