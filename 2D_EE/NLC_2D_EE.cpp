@@ -27,7 +27,30 @@ BZ_USING_NAMESPACE(blitz)
 #include "entropy.h"
   
 
-int main(){
+int main(int argc, char** argv){
+
+  int CurrentArg = 1;
+  string InputFile;
+  string OutputFile = "output_2d.dat";
+  bool LF = false;
+  // flags to set the input file (need to do that), output file (not used), and low field
+  while (CurrentArg < argc)
+    {
+      if (argv[ CurrentArg ] == string("-i") || argv[ CurrentArg ] == string("--input"))
+        {
+	  InputFile = string(argv[ CurrentArg + 1 ]);
+        }
+      if (argv[ CurrentArg ] == string("-o") || argv[ CurrentArg ] == string("--output"))
+        {
+	  OutputFile = string(argv[ CurrentArg + 1 ]);
+        }
+      if (argv[ CurrentArg ] == string("-LF") || argv[ CurrentArg ] == string("--lowfield"))
+	{
+	  LF = true;
+	}
+      CurrentArg++;
+    }
+
 
     double energy;
 
@@ -50,27 +73,26 @@ int main(){
     double RunningSumEntropy(0), RunningSumMagnetization;
     double mag;
 
-    ReadGraphsFromFile(fileGraphs, "order10rectangles.dat");
-    //ReadGraphsFromFile(fileGraphs,"L16pbc.dat");
+    ReadGraphsFromFile(fileGraphs, InputFile);
 
-    ofstream fout("output_1D.dat");
+    ofstream fout(OutputFile.c_str());
     fout.precision(10);
     cout.precision(10);
     
     J=1;     
 
-
-    double hvals[20] = {0.2,0.5,1,2,2.5,3.04,3.043,3.044,3.04405,3.0441,3.04415,3.0442,3.045,3.05,4,6,8,10,20,2000};
-    //   double hvals[1] = {1};
+    const int numhVals = 1;
+    //double hvals[numhVals] = {0.2,0.5,1,2,2.5,3.04,3.043,3.044,3.04405,3.0441,3.04415,3.0442,3.045,3.05,4,6,8,10,20,2000};
+    double hvals[numhVals] = {3.0441};
     //    double alphas[6] = {0.5,0.75,1.0,1.5,2.0,2.5};
     double alphas[1]={2};
     double alpha = 2.0;
     for(int q1=0;q1<1;q1++){ alpha = alphas[q1];
       //cout << "-----------------------------------" << endl << "S_"<<alpha<<endl;
       
-    for(double hh=0.1; hh<10; hh+=0.1){
+    for(int hh=0; hh<numhVals; hh++){
       //h=hvals[hh];  
-      h = hh;
+      h = hvals[hh];
       //cout <<  "h= " <<h <<" " << endl;
 
       //One Site Graph
@@ -94,8 +116,8 @@ int main(){
 	//---Generate the Hamiltonian---
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,h<1.0); 
-	//GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
-	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,1); 
+	//      GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
+	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,LF); 
 	
 
 	LANCZOS lancz(HV.Vdim);  //dimension of Hilbert space
