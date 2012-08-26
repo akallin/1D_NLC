@@ -33,6 +33,7 @@ int main(int argc, char** argv){
   string InputFile;
   string OutputFile = "output_2d.dat";
   bool LF = false;
+  double alpha = 2.0;
   // flags to set the input file (need to do that), output file (not used), and low field
   while (CurrentArg < argc)
     {
@@ -47,6 +48,10 @@ int main(int argc, char** argv){
       if (argv[ CurrentArg ] == string("-LF") || argv[ CurrentArg ] == string("--lowfield"))
 	{
 	  LF = true;
+	}
+      if (argv [ CurrentArg ] == string("-s") || argv[ CurrentArg ] == string("-S"))
+	{
+	  alpha = atof( argv [ CurrentArg + 1]);
 	}
       CurrentArg++;
     }
@@ -81,16 +86,11 @@ int main(int argc, char** argv){
     
     J=1;     
 
-    const int numhVals = 22;
+    const int numhVals = 1;
 
     //22 values
-    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
-    //double hvals[numhVals] = {3.0441};
-    //    double alphas[6] = {0.5,0.75,1.0,1.5,2.0,2.5};
-    double alphas[1]={2};
-    double alpha = 2.0;
-    for(int q1=0;q1<1;q1++){ alpha = alphas[q1];
-      //cout << "-----------------------------------" << endl << "S_"<<alpha<<endl;
+    //double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
+    double hvals[numhVals] = {3.0441};
       
     for(int hh=0; hh<numhVals; hh++){
       //h=hvals[hh];  
@@ -171,7 +171,7 @@ int main(int argc, char** argv){
       RunningSumCornerEntropy=0;
       RunningSumMagnetization=0;
     }
-    }
+
     fout.close();
     return 0;
 }
