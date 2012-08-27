@@ -87,21 +87,21 @@ int main(int argc, char** argv){
     
     J=1;     
 
-    const int numhVals = 1;
 
+    const int numhVals = 22;
     //22 values
-    //double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
-    double hvals[numhVals] = {3.0441};
+    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
+    //double hvals[numhVals] = {3.0441};
+
     
     string magFile;
     double magOne;
-
-    ostringstream s;
 
     for(int hh=0; hh<numhVals; hh++){
       //h=hvals[hh];  
       h = hvals[hh];
       //cout <<  "h= " <<h <<" " << endl;
+      ostringstream s;
       s<<"./MagFiles/mag"<<h<<".input";
       magFile = s.str();
       s.clear();
@@ -114,12 +114,13 @@ int main(int argc, char** argv){
 	if(h<3.044){ magOne=1.0;}
 	else{ magOne=0; }
       }
+      magIn.close();
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightLineEntropy.push_back(0);
       WeightCornerEntropy.push_back(0);
-      WeightMagnetization.push_back(1.);
+      WeightMagnetization.push_back(magOne);
       RunningSumEnergy = WeightEnergy.back();      
       RunningSumLineEntropy = 0;
       RunningSumCornerEntropy = 0;
@@ -139,7 +140,7 @@ int main(int argc, char** argv){
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
 	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,h<1.0); 
 	//      GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
-	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,LF); 
+	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,LF,magOne); 
 	
 
 	LANCZOS lancz(HV.Vdim);  //dimension of Hilbert space
@@ -180,6 +181,11 @@ int main(int argc, char** argv){
       cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
 	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
       
+      ofstream magOut(magFile.c_str());
+      magOut << RunningSumMagnetization;
+      magOut.close();
+      
+
       WeightEnergy.clear();
       WeightLineEntropy.clear();
       WeightCornerEntropy.clear();

@@ -1,7 +1,7 @@
 #include "GenHam.h"
 
 //----------------------------------------------------------
-GENHAM::GENHAM(const int Ns, const long double J_, const long double h_, vector <pair<int,int> > BBond_, bool Field)  
+GENHAM::GENHAM(const int Ns, const long double J_, const long double h_, vector <pair<int,int> > BBond_, bool Field, double mag_)  
 //create bases and determine dim of full Hilbert space
 {
 
@@ -11,6 +11,7 @@ GENHAM::GENHAM(const int Ns, const long double J_, const long double h_, vector 
   unsigned int Dim;
   Nsite = Ns;
   LowField = Field;
+  Mag = mag_;
 
   if( !LowField ) ConnectCount.resize(Ns, 0);
   else{
@@ -162,13 +163,14 @@ double GENHAM::HdiagPart(const long bra, int Sites){
   T1 = Sites-1;
   S0b = (bra>>T0)&1;
   S1b = (bra>>T1)&1;
+  
   if(LowField){ 
     //valH += -JJ*2*((S0b-0.5) + (S1b-0.5)); 
     for(unsigned int i = 0; i < ConnectCount.size(); i++)
-    {
-        valH += (4 - ConnectCount[i])*2*(-JJ)*( ((bra>>i)&1) - 0.5);
-    }
-  
+      {
+        valH += Mag*(4 - ConnectCount[i])*2*(-JJ)*( ((bra>>i)&1) - 0.5);
+      }
+    
   }
 
 

@@ -215,11 +215,12 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
     for (int sp=0; sp<Nsite; sp++){
       itemp += (i>>sp)&1; 
     }
-    magnetization += abs(itemp*2-Nsite)*eigs(i)*eigs(i);
+    magnetization += sqrt((itemp*2-Nsite)*(itemp*2-Nsite))*eigs(i)*eigs(i);
     itemp=0;
   }
   // mag was passed by ref to the function, so this is what it returns
   mag = magnetization;
+  //cout << "mag=" << mag << endl;
   // -8-8-8-8- End of Magnetization -8-8-8-8-
 
   // The dimensions of region A
