@@ -304,11 +304,11 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
     }
     
     // ------ GET ENTROPY!!! ------
-    tempEnt = (xMax-1)*getEE(alpha,SuperMat);
-    ents(0) += -tempEnt;
+    tempEnt = getEE(alpha,SuperMat);
+    ents(0) += -(xMax-1)*tempEnt;
     ents(1) += tempEnt;
     
-    if(ySize<(yMax+1)/2){ ents(0)+= -tempEnt; ents(1) += tempEnt;}
+    if(ySize<(yMax+1)/2){ ents(0)+= -(xMax-1)*tempEnt; ents(1) += tempEnt;}
 
     //cout << "Adim " << Adim << "  Bdim " << Bdim << "  Hent=" << getEE(alpha,SuperMat) <<endl;
       
