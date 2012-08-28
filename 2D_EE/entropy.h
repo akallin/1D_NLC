@@ -194,18 +194,12 @@ inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<long double,1
   //cout << endl;
 }
 
-inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1>& ents, double& mag, vector< vector< int > >& RScoords)
-{
-  // Get the graph dimensions from the realspace coordinates
-  int xMax = RScoords.size();
-  int yMax = RScoords[0].size();
-
+inline double Magnetization( Array<l_double,1>& eigs ){
   // The dimension is number of eigenvalues
   long int Dim = eigs.size();
 
   // Get number of sites from the dimension
   int Nsite = log2(Dim); 
-
 
   // -8-8-8-8- Measure the Magnetization!!! -8-8-8-8-
   long double magnetization(0);
@@ -223,10 +217,22 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
     norm += eigs(i)*eigs(i);
   }
   //cout << "norm="<< norm << endl; norm=0;
-  // mag was passed by ref to the function, so this is what it returns
-  mag = abs(magnetization);
-  cout << "mag=" << mag << endl;
+  
+  return abs(magnetization);
   // -8-8-8-8- End of Magnetization -8-8-8-8-
+}
+
+inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1>& ents, vector< vector< int > >& RScoords)
+{
+  // Get the graph dimensions from the realspace coordinates
+  int xMax = RScoords.size();
+  int yMax = RScoords[0].size();
+
+  // The dimension is number of eigenvalues
+  long int Dim = eigs.size();
+
+  // Get number of sites from the dimension
+  int Nsite = log2(Dim); 
 
   // The dimensions of region A
   int xSize(0), ySize(0), Adim(0), Bdim(0);

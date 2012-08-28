@@ -151,11 +151,11 @@ int main(int argc, char** argv){
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
 	//	Entropy1D(alpha, eVec, entVec, mag);
-	Entropy2D(alpha, eVec, entVec, mag, fileGraphs.at(i).RealSpaceCoordinates);
+	Entropy2D(alpha, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
 	
 	WeightLineEntropy.push_back(entVec(1));
 	WeightCornerEntropy.push_back(entVec(0));
-	WeightMagnetization.push_back(mag);
+	WeightMagnetization.push_back(Magnetization(eVec));
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 
 	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++){
