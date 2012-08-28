@@ -209,18 +209,23 @@ inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1
 
   // -8-8-8-8- Measure the Magnetization!!! -8-8-8-8-
   long double magnetization(0);
+  double norm(0);
   int itemp(0);
-
   for(int i=0; i<Dim; i++){ 
     for (int sp=0; sp<Nsite; sp++){
       itemp += (i>>sp)&1; 
     }
-    magnetization += sqrt((itemp*2-Nsite)*(itemp*2-Nsite))*eigs(i)*eigs(i);
+    
+    //cout << "   i=" <<i << ",  " << abs(itemp*2-Nsite) << "  eig(i)=" <<  eigs(i);
+    //magnetization += sqrt((itemp*2-Nsite)*(itemp*2-Nsite))*eigs(i)*eigs(i);
+    magnetization += (itemp*2.0 - Nsite*1.0)*eigs(i)*eigs(i);
     itemp=0;
+    norm += eigs(i)*eigs(i);
   }
+  //cout << "norm="<< norm << endl; norm=0;
   // mag was passed by ref to the function, so this is what it returns
-  mag = magnetization;
-  //cout << "mag=" << mag << endl;
+  mag = abs(magnetization);
+  cout << "mag=" << mag << endl;
   // -8-8-8-8- End of Magnetization -8-8-8-8-
 
   // The dimensions of region A

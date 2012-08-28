@@ -88,9 +88,9 @@ int main(int argc, char** argv){
     J=1;     
 
 
-    const int numhVals = 22;
-    //22 values
-    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
+    const int numhVals = 23;
+    //23 values
+    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
     //double hvals[numhVals] = {3.0441};
 
     
@@ -102,7 +102,7 @@ int main(int argc, char** argv){
       h = hvals[hh];
       //cout <<  "h= " <<h <<" " << endl;
       ostringstream s;
-      s<<"./MagFiles/mag"<<h<<".input";
+      s<<"./MagFRiles/mag"<<h<<".input";
       magFile = s.str();
       s.clear();
       
@@ -110,17 +110,14 @@ int main(int argc, char** argv){
       if(magIn){
 	magIn >> magOne;
       }
-      else{ 
-	if(h<3.044){ magOne=1.0;}
-	else{ magOne=0; }
-      }
+      else{ 	magOne=1.0;      }
       magIn.close();
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightLineEntropy.push_back(0);
       WeightCornerEntropy.push_back(0);
-      WeightMagnetization.push_back(magOne);
+      WeightMagnetization.push_back(1);
       RunningSumEnergy = WeightEnergy.back();      
       RunningSumLineEntropy = 0;
       RunningSumCornerEntropy = 0;
