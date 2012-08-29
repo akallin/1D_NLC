@@ -217,8 +217,8 @@ inline double Magnetization( Array<l_double,1>& eigs ){
     norm += eigs(i)*eigs(i);
   }
   //cout << "norm="<< norm << endl; norm=0;
-  
-  return abs(magnetization);
+  cout << "mag= " <<magnetization<<endl;
+  return (magnetization);
   // -8-8-8-8- End of Magnetization -8-8-8-8-
 }
 
