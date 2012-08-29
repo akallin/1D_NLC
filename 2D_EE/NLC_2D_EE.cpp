@@ -89,13 +89,13 @@ int main(int argc, char** argv){
 
 
     const int numhVals = 28;
-    //23 values
-    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.35,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
+    //28 values
+    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
     //double hvals[numhVals] = {3.0441};
 
     
     string magFile;
-    double magOne = 0;;
+    double magOne;
 
     for(int hh=0; hh<numhVals; hh++){
       //h=hvals[hh];  
@@ -106,17 +106,18 @@ int main(int argc, char** argv){
       magFile = s.str();
       s.clear();
       
-      if(LF){    ifstream magIn(magFile.c_str());
-	if(magIn){ magIn >> magOne;      }
-	else{ 	magOne=1.0;      }
-	magIn.close();
+      ifstream magIn(magFile.c_str());
+      if(magIn){
+	magIn >> magOne;
       }
+      else{ 	magOne=1.0;      }
+      magIn.close();
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightLineEntropy.push_back(0);
       WeightCornerEntropy.push_back(0);
-      WeightMagnetization.push_back(1);
+      WeightMagnetization.push_back(0);
       RunningSumEnergy = WeightEnergy.back();      
       RunningSumLineEntropy = 0;
       RunningSumCornerEntropy = 0;
@@ -176,11 +177,12 @@ int main(int argc, char** argv){
       
       cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
 	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
-      
+     
+      if(LF){ 
       ofstream magOut(magFile.c_str());
       magOut << RunningSumMagnetization;
       magOut.close();
-      
+      }
 
       WeightEnergy.clear();
       WeightLineEntropy.clear();
