@@ -95,7 +95,7 @@ int main(int argc, char** argv){
 
     
     string magFile;
-    double magOne;
+    double magOne = 0;;
 
     for(int hh=0; hh<numhVals; hh++){
       //h=hvals[hh];  
@@ -106,18 +106,17 @@ int main(int argc, char** argv){
       magFile = s.str();
       s.clear();
       
-      ifstream magIn(magFile.c_str());
-      if(magIn){
-	magIn >> magOne;
+      if(LF){    ifstream magIn(magFile.c_str());
+	if(magIn){ magIn >> magOne;      }
+	else{ 	magOne=1.0;      }
+	magIn.close();
       }
-      else{ 	magOne=1.0;      }
-      magIn.close();
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightLineEntropy.push_back(0);
       WeightCornerEntropy.push_back(0);
-      WeightMagnetization.push_back(0);
+      WeightMagnetization.push_back(1);
       RunningSumEnergy = WeightEnergy.back();      
       RunningSumLineEntropy = 0;
       RunningSumCornerEntropy = 0;
