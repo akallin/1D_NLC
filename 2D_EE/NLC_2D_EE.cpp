@@ -151,25 +151,25 @@ int main(int argc, char** argv){
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
 	//	Entropy1D(alpha, eVec, entVec, mag);
-	//Entropy2D(alpha, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
+	Entropy2D(alpha, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
 	
-	//WeightLineEntropy.push_back(entVec(1));
-	//WeightCornerEntropy.push_back(entVec(0));
+	WeightLineEntropy.push_back(entVec(1));
+	WeightCornerEntropy.push_back(entVec(0));
 	WeightMagnetization.push_back(Magnetization(eVec));
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 
 	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++){
 	  WeightEnergy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEnergy[fileGraphs.at(i).SubgraphList[j].first];
-	  // WeightLineEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightLineEntropy[fileGraphs.at(i).SubgraphList[j].first];
-	  // WeightCornerEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightCornerEntropy[fileGraphs.at(i).SubgraphList[j].first];	  
+	  WeightLineEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightLineEntropy[fileGraphs.at(i).SubgraphList[j].first];
+	  WeightCornerEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightCornerEntropy[fileGraphs.at(i).SubgraphList[j].first];	  
 	  WeightMagnetization.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightMagnetization[fileGraphs.at(i).SubgraphList[j].first];
 	}
 
 	// cout<<"h="<<h<<" J="<<J<<" graph #"<<i<<" energy "<<setprecision(12)<<energy<<endl;
 	// cout<<"WeightHigh["<<i<<"] = "<<WeightHigh.back()<<endl;
 	RunningSumEnergy += WeightEnergy.back()*fileGraphs.at(i).LatticeConstant;
-	//RunningSumLineEntropy += WeightLineEntropy.back()*fileGraphs.at(i).LatticeConstant;
-	//RunningSumCornerEntropy += WeightCornerEntropy.back()*fileGraphs.at(i).LatticeConstant;
+	RunningSumLineEntropy += WeightLineEntropy.back()*fileGraphs.at(i).LatticeConstant;
+	RunningSumCornerEntropy += WeightCornerEntropy.back()*fileGraphs.at(i).LatticeConstant;
 	RunningSumMagnetization += WeightMagnetization.back()*fileGraphs.at(i).LatticeConstant;
 	//	cout <<"S_ " <<alpha <<" h= "<< h<< " RunningSumEnergy " << i <<" "<< RunningSumEnergy << " Entropy= " << RunningSumEntropy 
 	//  << " Magnetization= " << RunningSumMagnetization << endl;
