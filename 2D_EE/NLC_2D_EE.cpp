@@ -34,7 +34,7 @@ int main(int argc, char** argv){
   string InputFile;
   string OutputFile = "output_2d.dat";
   bool LF = false;
-  double alpha = 2.0;
+  double alpha = 0;
   // flags to set the input file (need to do that), output file (not used), and low field
   while (CurrentArg < argc)
     {
@@ -64,64 +64,89 @@ int main(int argc, char** argv){
     double J;
     double h;
 
-    Array<l_double,1> eVec;
-    Array<long double,1> entVec;
-
     J=prm.JJ_;
     h=prm.hh_;
 
+    //eigenvector
+    Array<l_double,1> eVec;
+
+    //vector of entropies that gets passed to the entropy function
+    // contains both corner and line terms
+    vector< pair<double> > entVec;
 
     vector< graph > fileGraphs; //graph objects
     
-    vector<double> WeightEnergy;
-    vector<double> WeightLineEntropy, WeightCornerEntropy, WeightMagnetization;
-    double RunningSumEnergy(0);
-    double RunningSumLineEntropy(0), RunningSumCornerEntropy(0), RunningSumMagnetization;
-    double mag;
+    // List of weights for the different graphs
+    vector<double> WeightEnergy, WeightMagnetization;
+    vector< vector<double> > WeightLineEntropy, WeightCornerEntropy;
 
+    // Running sum of "the property"
+    double RunningSumEnergy(0), RunningSumMagnetization(0);
+    vector<double> RunningSumLineEntropy, RunningSumCornerEntropy;
+
+    // the magnetization from the 1D calculation (gets measured in entropy function)
+    //double mag;
+
+    // Self explanatory 
     ReadGraphsFromFile(fileGraphs, InputFile);
 
-    ofstream fout(OutputFile.c_str());
-    fout.precision(10);
+    //ofstream fout(OutputFile.c_str());
+    //fout.precision(10);
     cout.precision(10);
     
     J=1;     
 
-
-    const int numhVals = 28;
+    const int numhVals = 1;
     //28 values
-    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
-    //double hvals[numhVals] = {3.0441};
-
+    //double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
+    double hvals[numhVals] = {3.0441};
     
+    // The Renyi entropies to measure (if it's not set in commandline)
+    vector <double> alphas;
+    if(alpha!=0){
+      for(double a1=0.5; a1<3.04; a1+=0.05){
+	alphas.push_back(a1);
+      }
+    }
+    else{alphas.push_back(alpha);}
+
+    //RESIZE VECTORSSSSSSSSSSSS (for entropy)
+
+    // the magnetization file name for each h value & the value in it
     string magFile;
-    double magOne;
+    double magOne(1);
 
     for(int hh=0; hh<numhVals; hh++){
-      //h=hvals[hh];  
+
       h = hvals[hh];
-      //cout <<  "h= " <<h <<" " << endl;
+
+      //Make the magnetization file name for a given h value
       ostringstream s;
       s<<"./MagFiles/mag"<<h<<".input";
       magFile = s.str();
       s.clear();
       
+      //If the file exists read it in (only gets used in GenHam in low field case)
       ifstream magIn(magFile.c_str());
       if(magIn){
 	magIn >> magOne;
       }
-      else{ 	magOne=1.0;      }
+      // Otherwise magOne stays at 1 or the value used for the last h!
       magIn.close();
 
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
+      WeightMagnetization.push_back(0);  
+      //LOOP HERE
+      //for(int a=0; a<
       WeightLineEntropy.push_back(0);
       WeightCornerEntropy.push_back(0);
-      WeightMagnetization.push_back(0);
+
       RunningSumEnergy = WeightEnergy.back();      
+      RunningSumMagnetization = WeightMagnetization.back();
+      //LOOP HERE
       RunningSumLineEntropy = 0;
       RunningSumCornerEntropy = 0;
-      RunningSumMagnetization = WeightMagnetization.back();
       
       //Two Site Graph
       //WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
@@ -131,12 +156,10 @@ int main(int argc, char** argv){
       //RunningSumEnergy+=WeightEnergy.back();
       //RunningSumEntropy+=WeightEntropy.back();
 
+      //All the *real* graphs
       for (int i=1; i<fileGraphs.size(); i++){ //skip the zeroth graph
   	
-	//---Generate the Hamiltonian---
-	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,fileGraphs.at(i).LowField); 
-	//	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,h<1.0); 
-	//      GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,0); 
+	//---Generate the Hamiltonian--- 
 	GENHAM HV(fileGraphs.at(i).NumberSites,J,h,fileGraphs.at(i).AdjacencyList,LF,magOne); 
 	
 
@@ -150,12 +173,12 @@ int main(int argc, char** argv){
 	
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
-	//	Entropy1D(alpha, eVec, entVec, mag);
+	//Entropy1D(alpha, eVec, entVec, mag);
 	Entropy2D(alpha, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
-	
+	WeightMagnetization.push_back(Magnetization(eVec));
+	//Loop Here!!!
 	WeightLineEntropy.push_back(entVec(1));
 	WeightCornerEntropy.push_back(entVec(0));
-	WeightMagnetization.push_back(Magnetization(eVec));
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 
 	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++){
