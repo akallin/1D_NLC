@@ -87,7 +87,7 @@ int main(int argc, char** argv){
     // the magnetization from the 1D calculation (gets measured in entropy function)
     //double mag;
 
-    // Self explanatory 
+    // Self explanatory (good naming convention, Katie)
     ReadGraphsFromFile(fileGraphs, InputFile);
 
     //ofstream fout(OutputFile.c_str());
@@ -98,7 +98,8 @@ int main(int argc, char** argv){
 
     const int numhVals = 1;
     //28 values
-    //double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
+    /*double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,
+      4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};*/
     double hvals[numhVals] = {3.0441};
     
     // The Renyi entropies to measure (if it's not set in commandline)
@@ -110,7 +111,13 @@ int main(int argc, char** argv){
     }
     else{alphas.push_back(alpha);}
 
-    //RESIZE VECTORSSSSSSSSSSSS (for entropy)
+    //now that we know the # of renyis, resize entropy vectors
+    int numRenyis = alphas.size();
+    RunningSumLineEntropy.resize(numRenyis);
+    RunningSumCornerEntropy.resize(numRenyis);
+    WeightLineEntropy.resize(numRenyis);
+    WeightCornerEntropy.resize(numRenyis);
+    entVec.resize(numRenyis);
 
     // the magnetization file name for each h value & the value in it
     string magFile;
@@ -137,16 +144,18 @@ int main(int argc, char** argv){
       //One Site Graph
       WeightEnergy.push_back(-h); //Energy weight for zero graph (one site)
       WeightMagnetization.push_back(0);  
-      //LOOP HERE
-      //for(int a=0; a<
-      WeightLineEntropy.push_back(0);
-      WeightCornerEntropy.push_back(0);
+      //Loop through entropies
+      for(int a=0; a<numRenyis; a++){
+	WeightLineEntropy[a].push_back(0);
+	WeightCornerEntropy[a].push_back(0);
+      }//TEST THIS TO MAKE SURE WE'RE NOT GETTING 2 ZEROS OR SOMETHING !!!___!_!_!_!_!_!_!_!
 
       RunningSumEnergy = WeightEnergy.back();      
       RunningSumMagnetization = WeightMagnetization.back();
-      //LOOP HERE
-      RunningSumLineEntropy = 0;
-      RunningSumCornerEntropy = 0;
+      for(int a=0; a<numRenyis; a++){
+	RunningSumLineEntropy[a] = WeightLineEntropy[a].back();
+	RunningSumCornerEntropy[a] = WeightCornerEntropy[a].back();
+      }
       
       //Two Site Graph
       //WeightEnergy.push_back(-sqrt(1+4*h*h)+2*h);
@@ -176,28 +185,37 @@ int main(int argc, char** argv){
 	//Entropy1D(alpha, eVec, entVec, mag);
 	Entropy2D(alpha, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
 	WeightMagnetization.push_back(Magnetization(eVec));
-	//Loop Here!!!
-	WeightLineEntropy.push_back(entVec(1));
-	WeightCornerEntropy.push_back(entVec(0));
+
+	//Loop Here!!!  ALSO MAKE NOTE THAT LINE IS FIRST AND CORNER IS SECOND !_!_!_!_!_!_!_!_!_!_!_!_!_!
+	for(int a=0; a<numRenyis; a++){
+	  WeightLineEntropy[a].push_back(entVec[a].first);
+	  WeightCornerEntropy[a].push_back(entVec[a].second);
+	}
 	//cout<<"Entropy "<<i<<" = "<<WeightEntropy.back()<<endl;
 
 	for (int j = 0; j<fileGraphs.at(i).SubgraphList.size(); j++){
 	  WeightEnergy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightEnergy[fileGraphs.at(i).SubgraphList[j].first];
-	  WeightLineEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightLineEntropy[fileGraphs.at(i).SubgraphList[j].first];
-	  WeightCornerEntropy.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightCornerEntropy[fileGraphs.at(i).SubgraphList[j].first];	  
 	  WeightMagnetization.back() -= fileGraphs.at(i).SubgraphList[j].second * WeightMagnetization[fileGraphs.at(i).SubgraphList[j].first];
+	  for(int a=0; a<numRenyis; a++){
+	    WeightLineEntropy[a].back() -= fileGraphs.at(i).SubgraphList[j].second * WeightLineEntropy[a][fileGraphs.at(i).SubgraphList[j].first];
+	    WeightCornerEntropy[a].back() -= fileGraphs.at(i).SubgraphList[j].second * WeightCornerEntropy[a][fileGraphs.at(i).SubgraphList[j].first];
+	  }	  
 	}
 
 	// cout<<"h="<<h<<" J="<<J<<" graph #"<<i<<" energy "<<setprecision(12)<<energy<<endl;
 	// cout<<"WeightHigh["<<i<<"] = "<<WeightHigh.back()<<endl;
 	RunningSumEnergy += WeightEnergy.back()*fileGraphs.at(i).LatticeConstant;
-	RunningSumLineEntropy += WeightLineEntropy.back()*fileGraphs.at(i).LatticeConstant;
-	RunningSumCornerEntropy += WeightCornerEntropy.back()*fileGraphs.at(i).LatticeConstant;
 	RunningSumMagnetization += WeightMagnetization.back()*fileGraphs.at(i).LatticeConstant;
+	for(int a=0; a<numRenyis; a++){
+	  RunningSumLineEntropy[a] += WeightLineEntropy[a].back()*fileGraphs.at(i).LatticeConstant;
+	  RunningSumCornerEntropy[a] += WeightCornerEntropy[a].back()*fileGraphs.at(i).LatticeConstant;
+	}
 	//	cout <<"S_ " <<alpha <<" h= "<< h<< " RunningSumEnergy " << i <<" "<< RunningSumEnergy << " Entropy= " << RunningSumEntropy 
 	//  << " Magnetization= " << RunningSumMagnetization << endl;
       }
       
+      //FIND A GOOD WAY TO OUTPUT THE DATA!_!_!_!_!_!_!_!_!_!_!_!_!
+
       cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
 	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
      
@@ -208,15 +226,18 @@ int main(int argc, char** argv){
       }
 
       WeightEnergy.clear();
-      WeightLineEntropy.clear();
-      WeightCornerEntropy.clear();
       WeightMagnetization.clear();
       RunningSumEnergy=0;
-      RunningSumLineEntropy=0;
-      RunningSumCornerEntropy=0;
       RunningSumMagnetization=0;
+
+      for(int a=0; a<numRenyis; a++){
+	WeightLineEntropy[a].clear();
+	WeightCornerEntropy[a].clear();
+	RunningSumLineEntropy[a]=0;
+	RunningSumCornerEntropy[a]=0;
+      }
     }
 
-    fout.close();
+    // fout.close();
     return 0;
 }

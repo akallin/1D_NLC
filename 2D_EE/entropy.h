@@ -26,7 +26,7 @@ inline double TwoSiteEntropy(double h, double alpha)
   }
 }
 
-inline void Entropy1D(double alpha, Array<l_double,1>& eigs, Array<long double,1>& ents, double& mag)
+inline void Entropy1D(double alpha, Array<l_double,1>& eigs, vector< pair<double> >& ents, double& mag)
 {
   // The dimension is number of eigenvalues
   long int Dim = eigs.size();
@@ -221,9 +221,9 @@ inline double Magnetization( Array<l_double,1>& eigs ){
   return magnetization;
   // -8-8-8-8- End of Magnetization -8-8-8-8-
 }
-
-inline void Entropy2D(double alpha, Array<l_double,1>& eigs, Array<long double,1>& ents, vector< vector< int > >& RScoords)
-{
+		      
+		      inline void Entropy2D(double alpha, Array<l_double,1>& eigs, vector< pair <double> >& ents, vector< vector< int > >& RScoords)
+ {
   // Get the graph dimensions from the realspace coordinates
   int xMax = RScoords.size();
   int yMax = RScoords[0].size();
