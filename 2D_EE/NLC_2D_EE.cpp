@@ -57,7 +57,6 @@ int main(int argc, char** argv){
       CurrentArg++;
     }
 
-
     double energy;
 
     PARAMS prm;  //Read parameters from param.dat  : see simparam.h
@@ -100,11 +99,11 @@ int main(int argc, char** argv){
     //28 values
     /*double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,
       4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};*/
-    double hvals[numhVals] = {3.0441};
+    double hvals[numhVals] = {3.044};
     
     // The Renyi entropies to measure (if it's not set in commandline)
     vector <double> alphas;
-    if(alpha!=0){
+    if(alpha==0){
       for(double a1=0.5; a1<3.04; a1+=0.05){
 	alphas.push_back(a1);
       }
@@ -124,6 +123,8 @@ int main(int argc, char** argv){
     double magOne(1);
 
     for(int hh=0; hh<numhVals; hh++){
+      entVec.clear();
+      entVec.resize(numRenyis);
 
       h = hvals[hh];
 
@@ -219,6 +220,13 @@ int main(int argc, char** argv){
       //   cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
       //	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
      
+      cout << "h= " << setw(6) << h << " Ener= "<<setw(15)<<RunningSumEnergy<< " Mag= " << setw(15) << RunningSumMagnetization << endl;
+      for(int a=0; a<alphas.size(); a++){ 
+	cout << " S_ " << setw (5) << alphas[a] << "  Line= "<< setw(15) << RunningSumLineEntropy[a] 
+	     <<  " Corn=" << setw(15) << RunningSumCornerEntropy[a] << endl;
+      }
+      cout << endl;
+
       if(LF){ 
       ofstream magOut(magFile.c_str());
       magOut << RunningSumMagnetization;
