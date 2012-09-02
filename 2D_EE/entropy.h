@@ -2,7 +2,7 @@
 #ifndef entropy_H
 #define entropy_H
 
-int  getEE( vector <double>& alpha1, vector <double>& CornLineEnts, vector< vector<long double> >& SuperMat );
+void getEE( vector <double>& alpha1, vector <double>& CornLineEnts, vector< vector<long double> >& SuperMat );
 
 
 inline double TwoSiteEntropy(double h, double alpha)
@@ -153,7 +153,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
     }
     
     // ------ GET ENTROPY!!! ------
-    getEE(alpha1, tempEnt, SuperMat);
+    //    getEE(alpha1, tempEnt, SuperMat);
     for(int a=0; a<alpha1.size(); a++){
       ents[a].first += tempEnt[a];
       ents[a].second += -(xMax-1)*tempEnt[a];
@@ -231,7 +231,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
     }
      
     // ------ GET ENTROPY!!! ------
-    getEE(alpha1, tempEnt, SuperMat);
+    //    getEE(alpha1, tempEnt, SuperMat);
     for(int a=0; a<alpha1.size(); a++){
       ents[a].second += -(yMax-1)*tempEnt[a];
       if(xSize<(xMax+1)/2){ ents[a].second += -(yMax-1)*tempEnt[a]; }
@@ -310,7 +310,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
   }
 }
 
-int getEE(vector <double> alpha, vector<double >& CornLineEnts, vector< vector<long double> >& SuperMat ){
+void getEE(vector <double> alpha2, vector<double >& CornLineEnts, vector< vector<long double> >& SuperMat ){
   
   // The Density Matrix
   Array <double,2> DM;
@@ -354,12 +354,12 @@ int getEE(vector <double> alpha, vector<double >& CornLineEnts, vector< vector<l
   while(dd.size()>0){dd.erase(dd.begin());}
   diagWithLapack_R(DM,dd);
  
-  long double EE(0);
-  long double vN(0), renyi(0); 
+   double EE(0);
+   double vN(0), renyi(0); 
   temp=0;
   
 
-  for(int a=0; a<alpha.size(); a++){
+  for(int a=0; a<alpha2.size(); a++){
     EE=0;
     vN=0;
     renyi=0;
@@ -378,14 +378,13 @@ int getEE(vector <double> alpha, vector<double >& CornLineEnts, vector< vector<l
       // Same problem. If they're too small they get set to 0.
       if(abs(dd[s])<1e-15){dd[s]=0;}
       
-      renyi+=pow(dd[s],alpha[a]);
+      renyi+=pow(dd[s],alpha2[a]);
     }    
     
-    if(alpha[a]==1.0){EE = vN;}
-    else{EE = 1./(1.-alpha[a])*log(renyi);}
+    if(alpha2[a]==1.0){EE = vN;}
+    else{EE = 1./(1.-alpha2[a])*log(renyi);}
     
     CornLineEnts[a] = EE;
   }
-  return 0;
 }
 #endif
