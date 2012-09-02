@@ -72,7 +72,7 @@ int main(int argc, char** argv){
 
     //vector of entropies that gets passed to the entropy function
     // contains both corner and line terms
-    vector< pair<double> > entVec;
+    vector< pair<double, double> > entVec;
 
     vector< graph > fileGraphs; //graph objects
     
@@ -183,7 +183,7 @@ int main(int argc, char** argv){
 	//---Energy/Entropy NLC Calculation---
 	WeightEnergy.push_back(energy);
 	//Entropy1D(alpha, eVec, entVec, mag);
-	Entropy2D(alpha, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
+	Entropy2D(alphas, eVec, entVec, fileGraphs.at(i).RealSpaceCoordinates);
 	WeightMagnetization.push_back(Magnetization(eVec));
 
 	//Loop Here!!!  ALSO MAKE NOTE THAT LINE IS FIRST AND CORNER IS SECOND !_!_!_!_!_!_!_!_!_!_!_!_!_!
@@ -216,8 +216,8 @@ int main(int argc, char** argv){
       
       //FIND A GOOD WAY TO OUTPUT THE DATA!_!_!_!_!_!_!_!_!_!_!_!_!
 
-      cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
-	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
+      //   cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
+      //	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
      
       if(LF){ 
       ofstream magOut(magFile.c_str());
