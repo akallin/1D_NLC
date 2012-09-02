@@ -153,7 +153,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
     }
     
     // ------ GET ENTROPY!!! ------
-    //    getEE(alpha1, tempEnt, SuperMat);
+    getEE(alpha1, tempEnt, SuperMat);
     for(int a=0; a<alpha1.size(); a++){
       ents[a].first += tempEnt[a];
       ents[a].second += -(xMax-1)*tempEnt[a];
@@ -231,7 +231,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
     }
      
     // ------ GET ENTROPY!!! ------
-    //    getEE(alpha1, tempEnt, SuperMat);
+    getEE(alpha1, tempEnt, SuperMat);
     for(int a=0; a<alpha1.size(); a++){
       ents[a].second += -(yMax-1)*tempEnt[a];
       if(xSize<(xMax+1)/2){ ents[a].second += -(yMax-1)*tempEnt[a]; }
@@ -310,7 +310,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
   }
 }
 
-void getEE(vector <double> alpha2, vector<double >& CornLineEnts, vector< vector<long double> >& SuperMat ){
+void getEE(vector <double> & alpha2, vector<double > & CornLineEnts, vector< vector<long double> >& SuperMat ){
   
   // The Density Matrix
   Array <double,2> DM;
@@ -354,8 +354,8 @@ void getEE(vector <double> alpha2, vector<double >& CornLineEnts, vector< vector
   while(dd.size()>0){dd.erase(dd.begin());}
   diagWithLapack_R(DM,dd);
  
-   double EE(0);
-   double vN(0), renyi(0); 
+  double EE(0);
+  double vN(0), renyi(0); 
   temp=0;
   
 
@@ -387,4 +387,5 @@ void getEE(vector <double> alpha2, vector<double >& CornLineEnts, vector< vector
     CornLineEnts[a] = EE;
   }
 }
+
 #endif
