@@ -381,7 +381,7 @@ void getEE(vector <double> & alpha2, vector<double > & CornLineEnts, vector< vec
       renyi+=pow(dd[s],alpha2[a]);
     }    
     
-    if(alpha2[a]==1.0){EE = vN;}
+    if(abs(alpha2[a]-1.0)<0.000001){EE = vN;}
     else{EE = 1./(1.-alpha2[a])*log(renyi);}
     
     CornLineEnts[a] = EE;

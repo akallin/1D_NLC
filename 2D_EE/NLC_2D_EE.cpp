@@ -95,11 +95,11 @@ int main(int argc, char** argv){
     
     J=1;     
 
-    const int numhVals = 28;
+    const int numhVals = 1;
     //28 values
-    double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,
-      4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};
-    //double hvals[numhVals] = {3.044};
+    /* double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,
+       4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};*/
+    double hvals[numhVals] = {3.044};
     
     // The Renyi entropies to measure (if it's not set in commandline)
     vector <double> alphas;
@@ -222,8 +222,8 @@ int main(int argc, char** argv){
      
       cout << "h= " << setw(6) << h << " Ener= "<<setw(15)<<RunningSumEnergy<< " Mag= " << setw(15) << RunningSumMagnetization << endl;
       for(int a=0; a<alphas.size(); a++){ 
-	cout << " S_ " << setw (5) << alphas[a] << "  Line= "<< setw(15) << RunningSumLineEntropy[a] 
-	     <<  " Corn=" << setw(15) << RunningSumCornerEntropy[a] << endl;
+	cout << " S_ " << setw (5) << alphas[a] << "  Line= "<< setw(16) << RunningSumLineEntropy[a] 
+	     <<  " Corn=" << setw(17) << RunningSumCornerEntropy[a] << endl;
       }
       cout << endl;
 
