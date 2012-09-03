@@ -139,6 +139,7 @@ int main(int argc, char** argv){
       if(magIn){
 	magIn >> magOne;
       }
+      magOne = abs(magOne);
       // Otherwise magOne stays at 1 or the value used for the last h!
       magIn.close();
 
@@ -229,7 +230,7 @@ int main(int argc, char** argv){
 
       if(LF){ 
       ofstream magOut(magFile.c_str());
-      magOut << RunningSumMagnetization;
+      magOut << abs(RunningSumMagnetization);
       magOut.close();
       }
 
