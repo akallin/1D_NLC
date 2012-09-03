@@ -304,7 +304,7 @@ inline void Entropy2D(vector <double>& alpha1, Array<l_double,1>& eigs, vector< 
       // ------ GET ENTROPY!!! ------
       getEE(alpha1, tempEnt, SuperMat);
       for(int a=0; a<alpha1.size(); a++){
-	ents[a].second = 2*tempEnt[a];
+	ents[a].second += 2.*tempEnt[a];
       }
     }
   }
