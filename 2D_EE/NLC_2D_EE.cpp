@@ -95,12 +95,16 @@ int main(int argc, char** argv){
     
     J=1;     
 
-    const int numhVals = 1;
+    const int numhVals = 62;
     //28 values
-    /* double hvals[numhVals] = {0.2,0.5,1.0,1.5,2.0,2.5,3.0,3.0441,3.05,3.1,3.2,3.3,3.4,3.5,
-       4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,2000};*/
-    double hvals[numhVals] = {3.044};
-    
+     double hvals[numhVals] = {0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,
+				1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,
+				2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,2.95,3.0,
+				3.044,3.05,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9,4.0,
+				4.1,4.2,4.3,4.4,4.5,4.6,4.7,4.8,4.9,5.0,
+				5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10};
+     //   double hvals[numhVals] = {3.044};
+
     // The Renyi entropies to measure (if it's not set in commandline)
     vector <double> alphas;
     if(alpha==0){
@@ -120,7 +124,7 @@ int main(int argc, char** argv){
 
     // the magnetization file name for each h value & the value in it
     string magFile;
-    double magOne(1);
+    double magOne(0);
 
     for(int hh=0; hh<numhVals; hh++){
       entVec.clear();
@@ -130,7 +134,7 @@ int main(int argc, char** argv){
 
       //Make the magnetization file name for a given h value
       ostringstream s;
-      s<<"./MagFiles/mag"<<h<<".input";
+      s<<"./MagFRRRRRiles/mag"<<h<<".input";
       magFile = s.str();
       s.clear();
       
