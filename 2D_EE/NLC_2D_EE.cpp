@@ -133,6 +133,7 @@ int main(int argc, char** argv){
       h = hvals[hh];
 
       //Make the magnetization file name for a given h value
+      if(LF) magOne=1;
       ostringstream s;
       s<<"./MagFRRRRRiles/mag"<<h<<".input";
       magFile = s.str();
@@ -225,10 +226,10 @@ int main(int argc, char** argv){
       //   cout<<"S_"<<setw(4)<< alpha<<" h= " <<setw(6)<<h<<" Energy= "<<setw(15)<<RunningSumEnergy<<" LineEnt= "<<setw(15)<<RunningSumLineEntropy
       //	  <<" CornerEnt= "<<setw(15)<<RunningSumCornerEntropy<<" Magnetization= "<<setw(15)<<RunningSumMagnetization<<endl;
      
-      cout << "h= " << setw(6) << h << " Ener= "<<setw(15)<<RunningSumEnergy<< " Mag= " << setw(15) << RunningSumMagnetization << endl;
       for(int a=0; a<alphas.size(); a++){ 
-	cout << " S_ " << setw (5) << alphas[a] << "  Line= "<< setw(16) << RunningSumLineEntropy[a] 
-	     <<  " Corn=" << setw(17) << RunningSumCornerEntropy[a] << endl;
+	 cout << "h= " << setw(6) << h << " Ener= "<<setw(15)<<RunningSumEnergy<< " Mag= " << setw(15) << RunningSumMagnetization 
+	      << "  S_ " << setw (5) << alphas[a] << "  Line= "<< setw(16) << RunningSumLineEntropy[a] 
+	      << " Corn=" << setw(17) << RunningSumCornerEntropy[a] << endl;
       }
       cout << endl;
 
